@@ -35,6 +35,46 @@
       opacity: 0.82;
     }
 
+    .opening {
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    form {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    input {
+      background: transparent;
+      border: 1px solid rgba(241, 234, 220, 0.35);
+      color: #f1eadc;
+      padding: 0.85rem 1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1rem;
+      min-width: 260px;
+    }
+
+    input::placeholder {
+      color: rgba(241, 234, 220, 0.45);
+    }
+
+    button {
+      background: #f1eadc;
+      color: #0b0a08;
+      border: none;
+      padding: 0.85rem 1.1rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
     .small {
       margin-top: 2rem;
       font-size: 0.95rem;
@@ -46,6 +86,13 @@
   <main>
     <h1>Marginalia</h1>
     <p>A quiet place for readers to remember what moved them.</p>
+    <p class="opening">Opening soon</p>
+
+    <form>
+      <input type="email" placeholder="Your email address" required />
+      <button type="submit">Notify Me When Opened</button>
+    </form>
+
     <p class="small">readmarginalia.org</p>
   </main>
 </body>
