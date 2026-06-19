@@ -31,7 +31,7 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
 
 /* Screens — display is controlled entirely by JS (style.display),
    not by class, to avoid ID-selector specificity beating .screen display:none */
-.screen{animation:mgFade 1s ease both;}
+.screen{animation:mgFade 1s ease both;position:relative;z-index:1;}
 .screen.slow{animation-duration:1.4s;}
 
 /* Welcome */
@@ -261,16 +261,100 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
 .refl-share-toggle.active{color:#9A7B3F;border-bottom-color:#9A7B3F;}
 .no-refl{font-style:italic;color:#8A7A60;font-size:19px;}
 .detail-top{display:flex;gap:34px;flex-wrap:wrap;align-items:flex-start;}
+
+/* ===================================================================
+   Shared antiquarian motifs — bookshelves, sigil, opening book.
+   Kept faded and low so they enrich the hush rather than break it.
+   =================================================================== */
+.welcome-line{display:block;}
+.welcome-line + .welcome-line{margin-top:6px;}
+
+/* Faded, warm-lit bookshelves funnelling toward the centre */
+.shelf{position:fixed;top:0;bottom:0;width:210px;z-index:0;pointer-events:none;opacity:.3;}
+.shelf::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(120% 58% at 50% 13%, rgba(255,214,150,.4), rgba(255,214,150,0) 62%);}
+.shelf-left{left:0;
+  background:
+    repeating-linear-gradient(0deg, rgba(58,38,22,0) 0 128px, rgba(58,38,22,.65) 128px 138px),
+    repeating-linear-gradient(90deg,
+      #6e4b34 0 13px,#7c5a3d 13px 25px,#5a4a36 25px 33px,#8a6a3a 33px 48px,
+      #4f4636 48px 58px,#79503e 58px 72px,#b29a5f 72px 84px,#67563d 84px 99px,
+      #834f3a 99px 112px,#6c5a40 112px 126px);
+  -webkit-mask-image:linear-gradient(to right,#000 0%,#000 26%,transparent 100%);
+          mask-image:linear-gradient(to right,#000 0%,#000 26%,transparent 100%);}
+.shelf-right{right:0;
+  background:
+    repeating-linear-gradient(0deg, rgba(58,38,22,0) 0 128px, rgba(58,38,22,.65) 128px 138px),
+    repeating-linear-gradient(90deg,
+      #6c5a40 0 13px,#834f3a 13px 26px,#67563d 26px 34px,#b29a5f 34px 46px,
+      #79503e 46px 60px,#4f4636 60px 70px,#8a6a3a 70px 85px,#5a4a36 85px 93px,
+      #7c5a3d 93px 107px,#6e4b34 107px 122px);
+  -webkit-mask-image:linear-gradient(to left,#000 0%,#000 26%,transparent 100%);
+          mask-image:linear-gradient(to left,#000 0%,#000 26%,transparent 100%);}
+@media (max-width:860px){ .shelf{display:none;} }
+
+/* Metatron's Cube — faint canonical watermark over the whole page */
+#metatron{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:min(92vw,860px);height:min(92vw,860px);max-height:94vh;
+  z-index:0;pointer-events:none;opacity:.06;}
+#metatron svg{width:100%;height:100%;display:block;}
+
+/* The opening book on the welcome screen */
+.book-stage{margin-top:50px;perspective:1500px;cursor:pointer;display:inline-block;
+  -webkit-tap-highlight-color:transparent;text-align:center;}
+.book{position:relative;width:152px;height:212px;margin:0 auto;
+  transform-style:preserve-3d;transition:transform 1s ease;}
+.book-stage:hover .book{transform:translateY(-3px);}
+.book-shadow{position:absolute;left:8%;right:8%;bottom:-16px;height:20px;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(80,55,28,.3), rgba(80,55,28,0));}
+.book-pages{position:absolute;top:7px;left:9px;right:5px;bottom:7px;border-radius:2px 4px 4px 2px;
+  background:repeating-linear-gradient(90deg,#efe6cf 0 2px,#e7dcc0 2px 4px);
+  border:1px solid #d8c8a2;display:flex;align-items:center;justify-content:center;text-align:center;}
+.book-pages-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;
+  color:#8a7a60;opacity:0;transition:opacity .6s ease .5s;padding:0 16px;line-height:1.4;}
+.book-cover{position:absolute;inset:0;transform-origin:left center;
+  transition:transform 1.05s cubic-bezier(.42,.12,.18,1);
+  background:linear-gradient(135deg,#7d5b3c 0%,#664527 55%,#553a22 100%);
+  border-radius:3px 7px 7px 3px;border:1px solid #4f3720;backface-visibility:hidden;}
+.book-cover::before{content:'';position:absolute;left:0;top:0;bottom:0;width:9px;
+  background:linear-gradient(90deg,#3f2c19,#5a3f24);border-radius:3px 0 0 3px;}
+.book-cover-inner{position:absolute;inset:13px;border:1px solid rgba(202,166,95,.55);
+  border-radius:2px;display:flex;align-items:center;justify-content:center;}
+.book-cover-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+  font-size:30px;color:#e3c98c;letter-spacing:.02em;}
+.book-caption{margin-top:22px;font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+  color:#9A7B3F;opacity:.78;transition:opacity .4s ease;}
+.book-stage.is-open .book{transform:translateX(6px);}
+.book-stage.is-open .book-cover{transform:rotateY(-156deg);}
+.book-stage.is-open .book-pages-text{opacity:1;}
+.book-stage.is-open .book-caption{opacity:0;}
 </style>
 </head>
 <body>
+
+<!-- background motifs (canon continuity) -->
+<div class="shelf shelf-left" aria-hidden="true"></div>
+<div class="shelf shelf-right" aria-hidden="true"></div>
+<div id="metatron" aria-hidden="true"></div>
 
 <!-- WELCOME -->
 <section id="screen-welcome" class="screen slow" style="display:flex;">
   <div class="wordmark">Marginalia</div>
   <div class="rule-line"></div>
-  <p class="welcome-sub">A quiet place to tend the books that shape you. Nothing here is in a hurry.</p>
-  <button class="begin-btn" id="btn-begin">Begin</button>
+  <p class="welcome-sub">
+    <span class="welcome-line">A quiet place to tend the books that shape you.</span>
+    <span class="welcome-line">Built by a reader for fellow readers.</span>
+  </p>
+  <div class="book-stage" id="book-begin" role="button" tabindex="0" aria-label="Begin">
+    <div class="book">
+      <div class="book-shadow"></div>
+      <div class="book-pages"><span class="book-pages-text">Turn the page.</span></div>
+      <div class="book-cover">
+        <div class="book-cover-inner"><span class="book-cover-title">Begin</span></div>
+      </div>
+    </div>
+    <div class="book-caption">Press to begin</div>
+  </div>
 </section>
 
 <!-- WHY DO YOU READ -->
@@ -556,9 +640,54 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
   }
 
   // ---- WELCOME ----
-  document.getElementById('btn-begin').addEventListener('click',function(){
-    showScreen('why');
-  });
+  // The "Begin" book opens on click, then settles into the Why screen.
+  const bookStage = document.getElementById('book-begin');
+  function beginOpen(){
+    if(!bookStage || bookStage.classList.contains('is-open')) return;
+    bookStage.classList.add('is-open');
+    setTimeout(function(){ showScreen('why'); }, 1050);
+  }
+  if(bookStage){
+    bookStage.addEventListener('click', beginOpen);
+    bookStage.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); beginOpen(); }
+    });
+  }
+
+  // ---- Metatron's Cube watermark ----
+  function buildMetatron(){
+    const el = document.getElementById('metatron');
+    if(!el) return;
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(NS,'svg');
+    svg.setAttribute('viewBox','-10 -10 20 20');
+    svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+    const r = 2.2, R1 = 2*r, R2 = 2*r*Math.sqrt(3);
+    const pts = [[0,0]];
+    let i, j, a;
+    for(i=0;i<6;i++){ a = Math.PI/180*(60*i); pts.push([R1*Math.cos(a), R1*Math.sin(a)]); }
+    for(i=0;i<6;i++){ a = Math.PI/180*(30+60*i); pts.push([R2*Math.cos(a), R2*Math.sin(a)]); }
+    const g = document.createElementNS(NS,'g');
+    g.setAttribute('fill','none');
+    g.setAttribute('stroke','#9A7B3F');
+    g.setAttribute('stroke-width','0.04');
+    for(i=0;i<pts.length;i++){
+      for(j=i+1;j<pts.length;j++){
+        const ln = document.createElementNS(NS,'line');
+        ln.setAttribute('x1',pts[i][0].toFixed(3)); ln.setAttribute('y1',pts[i][1].toFixed(3));
+        ln.setAttribute('x2',pts[j][0].toFixed(3)); ln.setAttribute('y2',pts[j][1].toFixed(3));
+        g.appendChild(ln);
+      }
+    }
+    for(i=0;i<pts.length;i++){
+      const c = document.createElementNS(NS,'circle');
+      c.setAttribute('cx',pts[i][0].toFixed(3)); c.setAttribute('cy',pts[i][1].toFixed(3));
+      c.setAttribute('r',r.toFixed(3));
+      g.appendChild(c);
+    }
+    svg.appendChild(g);
+    el.appendChild(svg);
+  }
 
   // ---- WHY ----
   document.getElementById('btn-why-continue').addEventListener('click',function(){
@@ -887,6 +1016,7 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
   }
 
   // ---- Init ----
+  buildMetatron();
   load();
 
   if(state.screen==='welcome'){
