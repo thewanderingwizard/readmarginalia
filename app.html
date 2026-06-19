@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marginalia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:#E8DEC5;}
+body{
+  font-family:'EB Garamond',Georgia,serif;
+  color:#2B2117;
+  background:radial-gradient(120% 85% at 50% 16%,#F6EFDB 0%,#EAE0C8 64%,#E1D5BA 100%);
+  min-height:100vh;
+}
+::selection{background:rgba(154,123,63,0.22);}
+textarea,input{
+  font-family:'EB Garamond',Georgia,serif;
+  color:#2B2117;
+  outline:none;
+}
+textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
+
+@keyframes mgFade{
+  from{opacity:0;transform:translateY(8px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* Screens — display is controlled entirely by JS (style.display),
+   not by class, to avoid ID-selector specificity beating .screen display:none */
+.screen{animation:mgFade 1s ease both;}
+.screen.slow{animation-duration:1.4s;}
+
+/* Welcome */
+#screen-welcome{
+  min-height:100vh;flex-direction:column;
+  align-items:center;justify-content:center;padding:48px 24px;
+}
+.wordmark{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-weight:500;font-size:92px;
+  line-height:1;color:#2B2117;letter-spacing:0.01em;
+}
+.rule-line{width:64px;height:1px;background:#9A7B3F;margin:34px 0 30px;}
+.welcome-sub{
+  max-width:430px;text-align:center;font-size:20px;
+  line-height:1.7;color:#5A4C37;
+}
+.begin-btn{
+  margin-top:52px;font-size:15px;letter-spacing:0.34em;
+  text-transform:uppercase;color:#9A7B3F;cursor:pointer;
+  padding:14px 4px;border-bottom:1px solid #9A7B3F;
+  transition:opacity .4s ease;display:inline-block;
+  background:none;border-left:none;border-right:none;border-top:none;
+  font-family:'EB Garamond',serif;
+}
+.begin-btn:hover{opacity:0.62;}
+
+/* Why */
+#screen-why{min-height:100vh;align-items:center;justify-content:center;padding:64px 24px;}
+.why-inner{width:100%;max-width:600px;}
+.eyebrow{font-size:13px;letter-spacing:0.28em;text-transform:uppercase;color:#9A7B3F;margin-bottom:26px;}
+.headline-lg{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:54px;line-height:1.08;margin-bottom:30px;}
+.line-textarea{
+  width:100%;background:transparent;border:none;
+  border-bottom:1px solid #D2C29F;
+  font-family:'EB Garamond',serif;font-size:22px;line-height:1.6;
+  color:#2B2117;padding:6px 2px 14px;resize:none;display:block;
+}
+.field-label{font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#8A7A60;margin-bottom:10px;margin-top:42px;}
+.line-input{
+  width:100%;background:transparent;border:none;
+  border-bottom:1px solid #D2C29F;
+  font-family:'EB Garamond',serif;font-size:20px;color:#2B2117;
+  padding:6px 2px 12px;display:block;
+}
+.why-footer{display:flex;align-items:center;justify-content:space-between;margin-top:46px;flex-wrap:wrap;gap:18px;}
+.why-note{font-size:16px;font-style:italic;color:#8A7A60;}
+.continue-btn{
+  font-size:14px;letter-spacing:0.3em;text-transform:uppercase;
+  color:#9A7B3F;cursor:pointer;padding:12px 4px;
+  border-bottom:1px solid #9A7B3F;
+  background:none;border-left:none;border-right:none;border-top:none;
+  font-family:'EB Garamond',serif;
+}
+
+/* First Book + Add Book shared form */
+.form-screen{min-height:100vh;display:flex!important;align-items:center;justify-content:center;padding:64px 24px;}
+.form-inner{width:100%;max-width:600px;}
+.form-eyebrow{font-size:13px;letter-spacing:0.28em;text-transform:uppercase;color:#9A7B3F;margin-bottom:24px;}
+.form-headline{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:42px;line-height:1.12;margin-bottom:20px;}
+.form-sub{font-size:20px;line-height:1.7;color:#5A4C37;margin-bottom:44px;max-width:480px;}
+.form-field{margin-bottom:30px;}
+.form-field-label{font-size:12px;letter-spacing:0.24em;text-transform:uppercase;color:#8A7A60;margin-bottom:9px;}
+.form-field-label-gap{margin-bottom:14px;}
+.field-line-input{
+  width:100%;background:transparent;border:none;
+  border-bottom:1px solid #D2C29F;
+  font-family:'EB Garamond',serif;font-size:22px;color:#2B2117;
+  padding:6px 2px 12px;display:block;
+}
+.field-line-input.sm{font-size:20px;}
+.chips{display:flex;flex-wrap:wrap;gap:10px;}
+.chip{
+  font-family:'EB Garamond',serif;font-size:13px;
+  letter-spacing:0.16em;text-transform:uppercase;
+  padding:9px 16px;border:1px solid #D7C9AC;
+  color:#6E5E45;background:transparent;
+  cursor:pointer;border-radius:1px;
+  transition:all .25s ease;user-select:none;
+}
+.chip.active{border-color:#9A7B3F;color:#3A2E1C;background:rgba(154,123,63,0.12);}
+.photo-preview{max-width:160px;max-height:200px;border:1px solid #C9B98F;padding:5px;background:#F4ECD8;display:block;margin-bottom:12px;}
+.photo-btn{
+  display:inline-block;font-size:13px;letter-spacing:0.2em;
+  text-transform:uppercase;color:#6E5E45;
+  border:1px solid #D2C29F;padding:10px 18px;
+  cursor:pointer;border-radius:1px;
+  font-family:'EB Garamond',serif;
+}
+.photo-btn input[type=file]{display:none;}
+.field-reflection-textarea{
+  width:100%;background:transparent;border:none;
+  border-bottom:1px solid #D2C29F;
+  font-family:'EB Garamond',serif;font-size:20px;line-height:1.6;
+  color:#2B2117;padding:6px 2px 12px;resize:none;display:block;
+}
+.place-btn{
+  display:inline-block;font-size:14px;letter-spacing:0.3em;
+  text-transform:uppercase;color:#FBF4E2;background:#9A7B3F;
+  cursor:pointer;padding:15px 34px;border-radius:1px;
+  transition:background .35s ease;
+  border:none;font-family:'EB Garamond',serif;
+}
+.place-btn:hover{background:#83662F;}
+.form-error{margin-top:16px;font-style:italic;color:#9A5A3F;font-size:16px;}
+
+/* Library */
+#screen-library{max-width:1040px;margin:0 auto;padding:40px 32px 96px;}
+.lib-header{display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:26px;border-bottom:1px solid #D7C9AC;flex-wrap:wrap;gap:16px;}
+.lib-wordmark{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:40px;line-height:1;color:#2B2117;cursor:pointer;}
+.lib-tended{font-size:14px;letter-spacing:0.18em;text-transform:uppercase;color:#8A7A60;}
+.placed-banner{margin-top:28px;padding:18px 24px;border:1px solid #D7C9AC;background:rgba(154,123,63,0.07);font-style:italic;font-size:19px;color:#5A4C37;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.banner-dismiss{font-style:normal;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#9A7B3F;cursor:pointer;background:none;border:none;font-family:'EB Garamond',serif;}
+.lib-filters{display:flex;gap:30px;margin-top:34px;flex-wrap:wrap;}
+.filter-tab{
+  font-family:'EB Garamond',serif;font-size:15px;letter-spacing:0.14em;
+  text-transform:uppercase;color:#9A8C70;cursor:pointer;
+  padding-bottom:7px;border-bottom:1px solid transparent;
+  transition:all .3s ease;user-select:none;background:none;border-left:none;border-right:none;border-top:none;
+}
+.filter-tab.active{color:#3A2E1C;border-bottom-color:#9A7B3F;}
+.books-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(208px,1fr));gap:42px 34px;margin-top:48px;}
+.book-card{cursor:pointer;}
+.book-cover{height:288px;border:1px solid #C9B98F;padding:6px;background:#F4ECD8;box-sizing:border-box;overflow:hidden;}
+.book-cover img{width:100%;height:100%;object-fit:cover;display:block;}
+.book-cover-placeholder{
+  height:288px;border:1px solid #C9B98F;
+  background:linear-gradient(150deg,#F3EAD3,#EADFC2);
+  padding:26px 20px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;position:relative;
+}
+.book-cover-placeholder::before{
+  content:'';position:absolute;top:12px;left:12px;right:12px;bottom:12px;
+  border:1px solid #D2BE92;pointer-events:none;
+}
+.book-cover-title{font-family:'Cormorant Garamond',serif;font-size:25px;line-height:1.18;color:#3A2E1C;letter-spacing:0.01em;}
+.book-cover-rule{width:26px;height:1px;background:#9A7B3F;margin:16px 0;}
+.book-cover-author{font-size:15px;font-style:italic;color:#6E5E45;}
+.book-card-title{margin-top:14px;font-family:'EB Garamond',serif;font-size:19px;color:#2B2117;line-height:1.25;}
+.book-card-meta{margin-top:7px;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9A7B3F;}
+.empty-text{margin-top:64px;text-align:center;font-style:italic;font-size:21px;color:#8A7A60;}
+.add-book-wrap{margin-top:64px;display:flex;justify-content:center;}
+.add-book-btn{
+  font-size:14px;letter-spacing:0.28em;text-transform:uppercase;
+  color:#9A7B3F;cursor:pointer;border:1px solid #D2C29F;
+  padding:14px 30px;border-radius:1px;transition:background .35s ease;
+  font-family:'EB Garamond',serif;background:transparent;
+}
+.add-book-btn:hover{background:rgba(154,123,63,0.08);}
+.why-footer-section{margin-top:88px;padding-top:40px;border-top:1px solid #D7C9AC;text-align:center;}
+.why-footer-label{font-size:12px;letter-spacing:0.24em;text-transform:uppercase;color:#9A7B3F;margin-bottom:16px;}
+.why-footer-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:27px;line-height:1.5;color:#4A3D2A;max-width:620px;margin:0 auto;}
+
+/* Add Book screen */
+#screen-add-book{max-width:600px;margin:0 auto;padding:40px 24px 90px;}
+.back-link{font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:#9A7B3F;cursor:pointer;margin-bottom:40px;display:inline-block;background:none;border:none;font-family:'EB Garamond',serif;}
+.add-headline{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:46px;margin-bottom:38px;}
+
+/* Detail */
+#screen-detail{max-width:720px;margin:0 auto;padding:40px 24px 100px;}
+.detail-cover-wrap{flex:0 0 auto;width:172px;height:236px;border:1px solid #C9B98F;padding:6px;background:#F4ECD8;box-sizing:border-box;overflow:hidden;}
+.detail-cover-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.detail-meta{flex:1 1 280px;min-width:260px;}
+.detail-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:46px;line-height:1.08;color:#2B2117;}
+.detail-author{margin-top:12px;font-size:21px;font-style:italic;color:#6E5E45;}
+.detail-format{margin-top:10px;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#9A7B3F;}
+.status-section{margin-top:42px;padding-top:30px;border-top:1px solid #D7C9AC;}
+.status-label{font-size:12px;letter-spacing:0.24em;text-transform:uppercase;color:#8A7A60;margin-bottom:14px;}
+.essential-box{margin-top:36px;padding:26px 26px 30px;border:1px solid #D2BE92;background:rgba(154,123,63,0.06);}
+.essential-box-label{font-size:12px;letter-spacing:0.24em;text-transform:uppercase;color:#9A7B3F;margin-bottom:18px;}
+.ess-field-label{font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8A7A60;margin-bottom:8px;}
+.ess-textarea{
+  width:100%;background:transparent;border:none;
+  border-bottom:1px solid #D2C29F;
+  font-family:'EB Garamond',serif;font-size:19px;line-height:1.6;
+  color:#2B2117;padding:6px 2px 10px;resize:none;display:block;
+}
+.ess-input{
+  width:100%;background:transparent;border:none;
+  border-bottom:1px solid #D2C29F;
+  font-family:'EB Garamond',serif;font-size:18px;color:#2B2117;
+  padding:6px 2px 10px;display:block;
+}
+.keep-btn{
+  display:inline-block;font-size:13px;letter-spacing:0.26em;
+  text-transform:uppercase;color:#9A7B3F;cursor:pointer;
+  border-bottom:1px solid #9A7B3F;padding:6px 2px;
+  background:none;border-left:none;border-right:none;border-top:none;
+  font-family:'EB Garamond',serif;
+}
+.kept-msg{margin-left:18px;font-style:italic;color:#6E5E45;font-size:16px;}
+.reflections-section{margin-top:50px;}
+.reflections-heading{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:30px;color:#3A2E1C;margin-bottom:8px;}
+.reflections-note{font-size:16px;font-style:italic;color:#8A7A60;margin-bottom:30px;}
+.new-refl-textarea{
+  width:100%;background:#F4ECD8;border:1px solid #D7C9AC;
+  font-family:'EB Garamond',serif;font-size:19px;line-height:1.65;
+  color:#2B2117;padding:16px 18px;resize:none;display:block;
+}
+.refl-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:14px;}
+.share-toggle{
+  font-size:12px;letter-spacing:0.14em;text-transform:uppercase;
+  cursor:pointer;color:#A89A7C;border-bottom:1px solid transparent;
+  padding-bottom:3px;transition:all .25s ease;user-select:none;
+  background:none;border-left:none;border-right:none;border-top:none;
+  font-family:'EB Garamond',serif;
+}
+.share-toggle.active{color:#9A7B3F;border-bottom-color:#9A7B3F;}
+.inscribe-btn{
+  font-size:13px;letter-spacing:0.28em;text-transform:uppercase;
+  color:#FBF4E2;background:#9A7B3F;cursor:pointer;
+  padding:12px 26px;border-radius:1px;border:none;
+  font-family:'EB Garamond',serif;
+}
+.refl-list{display:flex;flex-direction:column;gap:28px;margin-top:4px;}
+.refl-item{border-left:2px solid #9A7B3F;padding:4px 0 4px 22px;}
+.refl-date{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#9A7B3F;margin-bottom:10px;}
+.refl-text{font-size:20px;line-height:1.66;color:#2B2117;}
+.refl-share-toggle{
+  display:inline-block;margin-top:14px;font-size:12px;
+  letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;
+  color:#A89A7C;border-bottom:1px solid transparent;
+  padding-bottom:3px;transition:all .25s ease;user-select:none;
+  background:none;border-left:none;border-right:none;border-top:none;
+  font-family:'EB Garamond',serif;
+}
+.refl-share-toggle.active{color:#9A7B3F;border-bottom-color:#9A7B3F;}
+.no-refl{font-style:italic;color:#8A7A60;font-size:19px;}
+.detail-top{display:flex;gap:34px;flex-wrap:wrap;align-items:flex-start;}
+</style>
+</head>
+<body>
+
+<!-- WELCOME -->
+<section id="screen-welcome" class="screen slow" style="display:flex;">
+  <div class="wordmark">Marginalia</div>
+  <div class="rule-line"></div>
+  <p class="welcome-sub">A quiet place to tend the books that shape you. Nothing here is in a hurry.</p>
+  <button class="begin-btn" id="btn-begin">Begin</button>
+</section>
+
+<!-- WHY DO YOU READ -->
+<section id="screen-why" class="screen" style="display:none;">
+  <div class="why-inner">
+    <div class="eyebrow">Before anything else</div>
+    <div class="headline-lg">Why do you read?</div>
+    <textarea id="why-text" class="line-textarea" rows="5" placeholder="Take as long as you need. There is no correct answer."></textarea>
+    <div class="field-label">A name to be known by, if you wish</div>
+    <input id="why-name" type="text" class="line-input" placeholder="optional">
+    <div class="why-footer">
+      <span class="why-note">This answer is yours alone. It will remain private.</span>
+      <button class="continue-btn" id="btn-why-continue">Continue</button>
+    </div>
+  </div>
+</section>
+
+<!-- FIRST BOOK -->
+<section id="screen-first-book" class="screen" style="display:none;">
+  <div class="form-screen" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:64px 24px;">
+    <div class="form-inner">
+      <div class="form-eyebrow">Walk to your shelf</div>
+      <div class="form-headline">Choose one book you can touch.</div>
+      <p class="form-sub">Not your favorite. Not the most important. Just one that calls to you. Place it here by hand.</p>
+
+      <div class="form-field">
+        <div class="form-field-label">Title</div>
+        <input id="fb-title" type="text" class="field-line-input">
+      </div>
+      <div class="form-field">
+        <div class="form-field-label">Author</div>
+        <input id="fb-author" type="text" class="field-line-input sm">
+      </div>
+      <div class="form-field">
+        <div class="form-field-label form-field-label-gap">The copy in your hands</div>
+        <div class="chips" id="fb-format-chips"></div>
+      </div>
+      <div class="form-field">
+        <div class="form-field-label form-field-label-gap">A photograph of your copy, if you like</div>
+        <img id="fb-photo-preview" class="photo-preview" style="display:none;" alt="Book cover">
+        <label class="photo-btn">
+          Choose a photograph
+          <input type="file" accept="image/*" id="fb-photo-input">
+        </label>
+      </div>
+      <div class="form-field" style="margin-bottom:40px;">
+        <div class="form-field-label">An opening reflection</div>
+        <textarea id="fb-reflection" class="field-reflection-textarea" rows="3" placeholder="Why this book, today?"></textarea>
+      </div>
+
+      <button class="place-btn" id="btn-place-first">Place this book</button>
+      <div class="form-error" id="fb-error" style="display:none;">A title is needed before the book can be placed.</div>
+    </div>
+  </div>
+</section>
+
+<!-- LIBRARY -->
+<section id="screen-library" class="screen" style="display:none;">
+  <div class="lib-header">
+    <div class="lib-wordmark" id="lib-wordmark">Marginalia</div>
+    <div class="lib-tended" id="lib-tended"></div>
+  </div>
+
+  <div class="placed-banner" id="placed-banner" style="display:none;">
+    <span>Your shelf begins here. Tend it slowly.</span>
+    <button class="banner-dismiss" id="btn-dismiss-banner">Dismiss</button>
+  </div>
+
+  <div class="lib-filters" id="lib-filters"></div>
+
+  <div class="books-grid" id="books-grid" style="display:none;"></div>
+  <div class="empty-text" id="empty-text" style="display:none;"></div>
+
+  <div class="add-book-wrap">
+    <button class="add-book-btn" id="btn-go-add">Add a book by hand</button>
+  </div>
+
+  <div class="why-footer-section" id="why-footer" style="display:none;">
+    <div class="why-footer-label">You once wrote, when asked why you read</div>
+    <div class="why-footer-quote" id="why-footer-quote"></div>
+  </div>
+</section>
+
+<!-- ADD BOOK -->
+<section id="screen-add-book" class="screen" style="display:none;">
+  <button class="back-link" id="btn-add-back">← Return to the shelf</button>
+  <div class="add-headline">Add a book by hand</div>
+
+  <div class="form-field">
+    <div class="form-field-label">Title</div>
+    <input id="ab-title" type="text" class="field-line-input">
+  </div>
+  <div class="form-field">
+    <div class="form-field-label">Author</div>
+    <input id="ab-author" type="text" class="field-line-input sm">
+  </div>
+  <div class="form-field">
+    <div class="form-field-label form-field-label-gap">The copy in your hands</div>
+    <div class="chips" id="ab-format-chips"></div>
+  </div>
+  <div class="form-field">
+    <div class="form-field-label form-field-label-gap">Where it rests</div>
+    <div class="chips" id="ab-status-chips"></div>
+  </div>
+  <div class="form-field" style="margin-bottom:42px;">
+    <div class="form-field-label form-field-label-gap">A photograph of your copy, if you like</div>
+    <img id="ab-photo-preview" class="photo-preview" style="display:none;" alt="Book cover">
+    <label class="photo-btn">
+      Choose a photograph
+      <input type="file" accept="image/*" id="ab-photo-input">
+    </label>
+  </div>
+
+  <button class="place-btn" id="btn-place-add">Place this book</button>
+  <div class="form-error" id="ab-error" style="display:none;">A title is needed before the book can be placed.</div>
+</section>
+
+<!-- BOOK DETAIL -->
+<section id="screen-detail" class="screen" style="display:none;">
+  <button class="back-link" id="btn-detail-back">← Return to the shelf</button>
+
+  <div class="detail-top" id="detail-top"></div>
+
+  <div class="status-section">
+    <div class="status-label">Where it rests</div>
+    <div class="chips" id="detail-status-chips"></div>
+  </div>
+
+  <div id="essential-box" style="display:none;" class="essential-box">
+    <div class="essential-box-label">A book that formed you</div>
+    <div style="margin-bottom:20px;">
+      <div class="ess-field-label">Why it matters</div>
+      <textarea id="ess-why" class="ess-textarea" rows="3" placeholder="What did it leave in you?"></textarea>
+    </div>
+    <div style="margin-bottom:22px;">
+      <div class="ess-field-label">When, or what life it belongs to</div>
+      <input id="ess-when" type="text" class="ess-input" placeholder="a season, an age, a place">
+    </div>
+    <button class="keep-btn" id="btn-keep-essential">Keep</button>
+    <span class="kept-msg" id="kept-msg" style="display:none;">Kept.</span>
+  </div>
+
+  <div class="reflections-section">
+    <div class="reflections-heading">In the margins</div>
+    <p class="reflections-note">Reflections are private by default. You may mark a note to be offered for sharing once the book is finished.</p>
+
+    <div style="margin-bottom:40px;">
+      <textarea id="new-refl-text" class="new-refl-textarea" rows="3" placeholder="What is stirring as you read?"></textarea>
+      <div class="refl-footer">
+        <button class="share-toggle" id="draft-share-toggle">Mark this note to share when finished</button>
+        <button class="inscribe-btn" id="btn-inscribe">Inscribe</button>
+      </div>
+    </div>
+
+    <div id="refl-list"></div>
+  </div>
+</section>
+
+<script>
+(function(){
+  'use strict';
+
+  const KEY = 'marginalia.v0.1';
+  const FORMATS = ['Hardcover','Softcover','Digital','PDF','Audio'];
+  const STATUS_LABELS = {reading:'Currently Reading',horizon:'On the Horizon',finished:'Finished',essential:'Essential Reads'};
+  const STATUS_ORDER = ['reading','horizon','finished','essential'];
+  const FILTERS = [['all','All'],['reading','Currently Reading'],['horizon','On the Horizon'],['essential','Essential Reads'],['finished','Finished']];
+  const EMPTY_MAP = {
+    all:'Your shelf is bare. Place the first book by hand.',
+    reading:'You are not reading anything just now.',
+    horizon:'Nothing waits on the horizon yet.',
+    essential:'No book has been named essential. They reveal themselves in time.',
+    finished:'Nothing finished here yet. Slowness is not a flaw.',
+  };
+
+  let state = {
+    screen: 'welcome',
+    profile: {name:'',why:''},
+    books: [],
+    onboarded: false,
+    selectedId: null,
+    filter: 'all',
+    draftFormat: 'Softcover',
+    draftStatus: 'horizon',
+    draftPhoto: null,
+    draftShare: false,
+    justPlaced: false,
+    essentialSaved: false,
+  };
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      if(raw){
+        const d = JSON.parse(raw);
+        state.profile = d.profile || state.profile;
+        state.books = Array.isArray(d.books) ? d.books : [];
+        state.onboarded = !!d.onboarded;
+        state.screen = d.onboarded ? 'library' : 'welcome';
+      }
+    }catch(e){}
+  }
+
+  function persist(){
+    try{
+      localStorage.setItem(KEY,JSON.stringify({profile:state.profile,books:state.books,onboarded:state.onboarded}));
+    }catch(e){}
+  }
+
+  function uid(){ return 'b'+Math.random().toString(36).slice(2,9); }
+
+  function numberWord(n){
+    const w=['no','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
+    return n<=12?w[n]:String(n);
+  }
+
+  function fmtDate(ts){
+    try{ return new Date(ts).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
+    catch(e){ return ''; }
+  }
+
+  // Display values per screen — flex for centered layouts, block for scrolling pages
+  const SCREEN_DISPLAY = {
+    welcome:'flex', why:'flex', firstBook:'block',
+    library:'block', addBook:'block', detail:'block',
+  };
+
+  // ---- Screen navigation ----
+  function showScreen(name){
+    document.querySelectorAll('.screen').forEach(function(s){
+      s.style.display='none';
+      s.classList.remove('slow');
+    });
+    const id = 'screen-'+name.replace(/([A-Z])/g,'-$1').toLowerCase();
+    const el = document.getElementById(id);
+    if(el){
+      el.style.display = SCREEN_DISPLAY[name] || 'block';
+      if(name==='welcome') el.classList.add('slow');
+      // Re-trigger animation
+      el.style.animation='none';
+      el.offsetHeight; // reflow
+      el.style.animation='';
+    }
+    state.screen = name;
+  }
+
+  // ---- Chip helpers ----
+  function renderChips(container, items, activeVal, onChoose){
+    container.innerHTML='';
+    items.forEach(function(item){
+      const btn = document.createElement('button');
+      btn.className = 'chip'+(item.value===activeVal?' active':'');
+      btn.textContent = item.label;
+      btn.addEventListener('click',function(){ onChoose(item.value); });
+      container.appendChild(btn);
+    });
+  }
+
+  function renderFormatChips(containerId, activeGetter, stateProp){
+    const container = document.getElementById(containerId);
+    const formats = FORMATS.map(f=>({label:f,value:f}));
+    renderChips(container, formats, activeGetter(), function(v){
+      state[stateProp] = v;
+      renderFormatChips(containerId, activeGetter, stateProp);
+    });
+  }
+
+  // ---- Photo upload ----
+  function setupPhotoInput(inputId, previewId){
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    input.addEventListener('change',function(e){
+      const file = e.target.files && e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        state.draftPhoto = ev.target.result;
+        preview.src = ev.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ---- WELCOME ----
+  document.getElementById('btn-begin').addEventListener('click',function(){
+    showScreen('why');
+  });
+
+  // ---- WHY ----
+  document.getElementById('btn-why-continue').addEventListener('click',function(){
+    const why = document.getElementById('why-text').value.trim();
+    const name = document.getElementById('why-name').value.trim();
+    state.profile = {name,why};
+    state.draftFormat = 'Softcover';
+    state.draftPhoto = null;
+    persist();
+    resetFirstBookForm();
+    showScreen('firstBook');
+  });
+
+  // ---- FIRST BOOK ----
+  function resetFirstBookForm(){
+    document.getElementById('fb-title').value='';
+    document.getElementById('fb-author').value='';
+    document.getElementById('fb-reflection').value='';
+    document.getElementById('fb-photo-preview').style.display='none';
+    document.getElementById('fb-photo-input').value='';
+    document.getElementById('fb-error').style.display='none';
+    state.draftFormat='Softcover';
+    state.draftPhoto=null;
+    renderFormatChips('fb-format-chips',function(){ return state.draftFormat; },'draftFormat');
+  }
+
+  setupPhotoInput('fb-photo-input','fb-photo-preview');
+
+  document.getElementById('btn-place-first').addEventListener('click',function(){
+    const title = document.getElementById('fb-title').value.trim();
+    if(!title){ document.getElementById('fb-error').style.display='block'; return; }
+    const author = document.getElementById('fb-author').value.trim();
+    const refl = document.getElementById('fb-reflection').value.trim();
+    const book = {
+      id:uid(), title, author:author||'Unknown hand',
+      format:state.draftFormat, photo:state.draftPhoto||null,
+      status:'reading', addedAt:Date.now(), reflections:[],
+      essentialWhy:'', essentialWhen:'',
+    };
+    if(refl) book.reflections.push({id:uid(),text:refl,ts:Date.now(),shareable:false});
+    state.books = [book].concat(state.books);
+    state.onboarded = true;
+    state.justPlaced = true;
+    state.draftPhoto = null;
+    state.draftFormat = 'Softcover';
+    persist();
+    renderLibrary();
+    showScreen('library');
+  });
+
+  // ---- LIBRARY ----
+  document.getElementById('lib-wordmark').addEventListener('click',function(){ goLibrary(); });
+  document.getElementById('btn-go-add').addEventListener('click',function(){ goAdd(); });
+  document.getElementById('btn-dismiss-banner').addEventListener('click',function(){
+    state.justPlaced=false;
+    document.getElementById('placed-banner').style.display='none';
+  });
+
+  function goLibrary(){
+    state.selectedId=null;
+    state.essentialSaved=false;
+    renderLibrary();
+    showScreen('library');
+  }
+
+  function renderLibrary(){
+    // tended label
+    const count = state.books.length;
+    const word = numberWord(count);
+    const label = count===0 ? 'a new shelf' : (word.charAt(0).toUpperCase()+word.slice(1))+(count===1?' book tended':' books tended');
+    document.getElementById('lib-tended').textContent = label;
+
+    // banner
+    document.getElementById('placed-banner').style.display = state.justPlaced?'flex':'none';
+
+    // filters
+    const filtersEl = document.getElementById('lib-filters');
+    filtersEl.innerHTML='';
+    FILTERS.forEach(function([v,label]){
+      const btn = document.createElement('button');
+      btn.className='filter-tab'+(state.filter===v?' active':'');
+      btn.textContent=label;
+      btn.addEventListener('click',function(){
+        state.filter=v;
+        state.justPlaced=false;
+        document.getElementById('placed-banner').style.display='none';
+        renderLibrary();
+      });
+      filtersEl.appendChild(btn);
+    });
+
+    // books
+    const filtered = state.books.filter(function(b){ return state.filter==='all'?true:b.status===state.filter; });
+    const grid = document.getElementById('books-grid');
+    const emptyEl = document.getElementById('empty-text');
+
+    if(filtered.length===0){
+      grid.style.display='none';
+      emptyEl.style.display='block';
+      emptyEl.textContent = EMPTY_MAP[state.filter]||EMPTY_MAP.all;
+    } else {
+      emptyEl.style.display='none';
+      grid.style.display='grid';
+      grid.innerHTML='';
+      filtered.forEach(function(b){
+        const card = document.createElement('div');
+        card.className='book-card';
+        card.addEventListener('click',function(){ openBook(b.id); });
+
+        let coverHtml;
+        if(b.photo){
+          coverHtml='<div class="book-cover"><img src="'+escHtml(b.photo)+'" alt="'+escHtml(b.title)+'"></div>';
+        } else {
+          coverHtml='<div class="book-cover-placeholder"><div class="book-cover-title">'+escHtml(b.title)+'</div><div class="book-cover-rule"></div><div class="book-cover-author">'+escHtml(b.author)+'</div></div>';
+        }
+        const metaLine = (STATUS_LABELS[b.status]||b.status)+'  ·  '+b.format;
+        card.innerHTML = coverHtml+'<div class="book-card-title">'+escHtml(b.title)+'</div><div class="book-card-meta">'+escHtml(metaLine)+'</div>';
+        grid.appendChild(card);
+      });
+    }
+
+    // why footer
+    const whyFooter = document.getElementById('why-footer');
+    if(state.profile&&state.profile.why){
+      whyFooter.style.display='block';
+      document.getElementById('why-footer-quote').textContent = '“'+state.profile.why+'”';
+    } else {
+      whyFooter.style.display='none';
+    }
+  }
+
+  // ---- ADD BOOK ----
+  function goAdd(){
+    state.draftFormat='Softcover';
+    state.draftStatus='horizon';
+    state.draftPhoto=null;
+    document.getElementById('ab-title').value='';
+    document.getElementById('ab-author').value='';
+    document.getElementById('ab-photo-preview').style.display='none';
+    document.getElementById('ab-photo-input').value='';
+    document.getElementById('ab-error').style.display='none';
+    renderFormatChips('ab-format-chips',function(){ return state.draftFormat; },'draftFormat');
+    renderStatusChips();
+    showScreen('addBook');
+  }
+
+  function renderStatusChips(){
+    const container = document.getElementById('ab-status-chips');
+    const items = STATUS_ORDER.map(function(v){ return {label:STATUS_LABELS[v],value:v}; });
+    renderChips(container, items, state.draftStatus, function(v){
+      state.draftStatus=v;
+      renderStatusChips();
+    });
+  }
+
+  setupPhotoInput('ab-photo-input','ab-photo-preview');
+
+  document.getElementById('btn-add-back').addEventListener('click',function(){ goLibrary(); });
+
+  document.getElementById('btn-place-add').addEventListener('click',function(){
+    const title = document.getElementById('ab-title').value.trim();
+    if(!title){ document.getElementById('ab-error').style.display='block'; return; }
+    const author = document.getElementById('ab-author').value.trim();
+    const book = {
+      id:uid(), title, author:author||'Unknown hand',
+      format:state.draftFormat, photo:state.draftPhoto||null,
+      status:state.draftStatus, addedAt:Date.now(), reflections:[],
+      essentialWhy:'', essentialWhen:'',
+    };
+    state.books = [book].concat(state.books);
+    state.draftPhoto=null;
+    state.draftFormat='Softcover';
+    state.draftStatus='horizon';
+    persist();
+    goLibrary();
+  });
+
+  // ---- BOOK DETAIL ----
+  function openBook(id){
+    state.selectedId = id;
+    state.draftShare = false;
+    state.essentialSaved = false;
+    renderDetail();
+    showScreen('detail');
+  }
+
+  document.getElementById('btn-detail-back').addEventListener('click',function(){ goLibrary(); });
+
+  document.getElementById('btn-keep-essential').addEventListener('click',function(){
+    const id = state.selectedId;
+    const why = document.getElementById('ess-why').value.trim();
+    const when = document.getElementById('ess-when').value.trim();
+    state.books = state.books.map(function(b){
+      return b.id===id ? Object.assign({},b,{essentialWhy:why,essentialWhen:when}) : b;
+    });
+    state.essentialSaved=true;
+    document.getElementById('kept-msg').style.display='inline';
+    persist();
+  });
+
+  const draftShareBtn = document.getElementById('draft-share-toggle');
+  draftShareBtn.addEventListener('click',function(){
+    state.draftShare=!state.draftShare;
+    updateDraftShareBtn();
+  });
+
+  function updateDraftShareBtn(){
+    draftShareBtn.classList.toggle('active',state.draftShare);
+    draftShareBtn.textContent = state.draftShare ? 'This note will be offered for sharing once finished' : 'Mark this note to share when finished';
+  }
+
+  document.getElementById('btn-inscribe').addEventListener('click',function(){
+    const id = state.selectedId;
+    const text = document.getElementById('new-refl-text').value.trim();
+    if(!text) return;
+    const note = {id:uid(),text,ts:Date.now(),shareable:state.draftShare};
+    state.books = state.books.map(function(b){
+      if(b.id!==id) return b;
+      return Object.assign({},b,{reflections:(b.reflections||[]).concat([note])});
+    });
+    document.getElementById('new-refl-text').value='';
+    state.draftShare=false;
+    updateDraftShareBtn();
+    persist();
+    renderReflections();
+  });
+
+  function renderDetail(){
+    const book = state.books.find(function(b){ return b.id===state.selectedId; });
+    if(!book) return;
+
+    // top section
+    const topEl = document.getElementById('detail-top');
+    let topHtml='';
+    if(book.photo){
+      topHtml+='<div class="detail-cover-wrap"><img src="'+escHtml(book.photo)+'" alt="'+escHtml(book.title)+'"></div>';
+    }
+    topHtml+='<div class="detail-meta"><div class="detail-title">'+escHtml(book.title)+'</div><div class="detail-author">'+escHtml(book.author)+'</div><div class="detail-format">'+escHtml(book.format)+'</div></div>';
+    topEl.innerHTML=topHtml;
+
+    // status chips
+    renderDetailStatusChips(book);
+
+    // essential box
+    const essBox = document.getElementById('essential-box');
+    if(book.status==='essential'){
+      essBox.style.display='block';
+      document.getElementById('ess-why').value=book.essentialWhy||'';
+      document.getElementById('ess-when').value=book.essentialWhen||'';
+      document.getElementById('kept-msg').style.display=state.essentialSaved?'inline':'none';
+    } else {
+      essBox.style.display='none';
+    }
+
+    // draft share btn
+    state.draftShare=false;
+    updateDraftShareBtn();
+
+    // reflections
+    renderReflections();
+  }
+
+  function renderDetailStatusChips(book){
+    const container = document.getElementById('detail-status-chips');
+    const items = STATUS_ORDER.map(function(v){ return {label:STATUS_LABELS[v],value:v}; });
+    renderChips(container, items, book.status, function(v){
+      state.books = state.books.map(function(b){
+        return b.id===book.id ? Object.assign({},b,{status:v}) : b;
+      });
+      persist();
+      const updated = state.books.find(function(b){ return b.id===book.id; });
+      renderDetailStatusChips(updated);
+      // show/hide essential box
+      const essBox = document.getElementById('essential-box');
+      if(v==='essential'){
+        essBox.style.display='block';
+        document.getElementById('ess-why').value=updated.essentialWhy||'';
+        document.getElementById('ess-when').value=updated.essentialWhen||'';
+        document.getElementById('kept-msg').style.display='none';
+        state.essentialSaved=false;
+      } else {
+        essBox.style.display='none';
+      }
+    });
+  }
+
+  function renderReflections(){
+    const book = state.books.find(function(b){ return b.id===state.selectedId; });
+    if(!book) return;
+    const listEl = document.getElementById('refl-list');
+    const refls = (book.reflections||[]).slice().sort(function(a,b){ return b.ts-a.ts; });
+    if(refls.length===0){
+      listEl.innerHTML='<div class="no-refl">No marginalia yet. The first thought is always the quietest.</div>';
+      return;
+    }
+    listEl.innerHTML='';
+    const ul = document.createElement('div');
+    ul.className='refl-list';
+    refls.forEach(function(r){
+      const item = document.createElement('div');
+      item.className='refl-item';
+      const shareLabel = r.shareable ? 'Will be offered for sharing once finished' : 'Mark to share when finished';
+      item.innerHTML='<div class="refl-date">'+escHtml(fmtDate(r.ts))+'</div><div class="refl-text">'+escHtml(r.text)+'</div><button class="refl-share-toggle'+(r.shareable?' active':'')+'">'+escHtml(shareLabel)+'</button>';
+      item.querySelector('.refl-share-toggle').addEventListener('click',function(){
+        toggleReflShare(book.id,r.id);
+      });
+      ul.appendChild(item);
+    });
+    listEl.appendChild(ul);
+  }
+
+  function toggleReflShare(bookId,reflId){
+    state.books = state.books.map(function(b){
+      if(b.id!==bookId) return b;
+      return Object.assign({},b,{reflections:b.reflections.map(function(r){
+        return r.id===reflId ? Object.assign({},r,{shareable:!r.shareable}) : r;
+      })});
+    });
+    persist();
+    renderReflections();
+  }
+
+  // ---- Utilities ----
+  function escHtml(str){
+    return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ---- Init ----
+  load();
+
+  if(state.screen==='welcome'){
+    // already shown by default
+  } else if(state.screen==='library'){
+    renderLibrary();
+    showScreen('library');
+  }
+
+  // Init chips for first book screen in case it's rendered
+  renderFormatChips('fb-format-chips',function(){ return state.draftFormat; },'draftFormat');
+
+})();
+</script>
+</body>
+</html>
