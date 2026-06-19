@@ -303,18 +303,18 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
   border:1px solid #d8c8a2;display:flex;align-items:center;justify-content:center;text-align:center;}
 .book-pages-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;
   color:#8a7a60;opacity:0;transition:opacity .6s ease .5s;padding:0 16px;line-height:1.4;}
-.book-cover{position:absolute;inset:0;transform-origin:left center;
+.bookbegin-cover{position:absolute;inset:0;transform-origin:left center;
   transition:transform 1.05s cubic-bezier(.42,.12,.18,1);
   background:linear-gradient(135deg,#7d5b3c 0%,#664527 55%,#553a22 100%);
   border-radius:3px 7px 7px 3px;border:1px solid #4f3720;backface-visibility:hidden;}
-.book-cover::before{content:'';position:absolute;left:0;top:0;bottom:0;width:9px;
+.bookbegin-cover::before{content:'';position:absolute;left:0;top:0;bottom:0;width:9px;
   background:linear-gradient(90deg,#3f2c19,#5a3f24);border-radius:3px 0 0 3px;}
-.book-cover-inner{position:absolute;inset:13px;border:1px solid rgba(202,166,95,.55);
+.bookbegin-cover-inner{position:absolute;inset:13px;border:1px solid rgba(202,166,95,.55);
   border-radius:2px;display:flex;align-items:center;justify-content:center;}
-.book-cover-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+.bookbegin-cover-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
   font-size:34px;color:#e3c98c;letter-spacing:.02em;}
 .book-stage.is-open .book{transform:translateX(6px);}
-.book-stage.is-open .book-cover{transform:rotateY(-156deg);}
+.book-stage.is-open .bookbegin-cover{transform:rotateY(-156deg);}
 .book-stage.is-open .book-pages-text{opacity:1;}
 </style>
 </head>
@@ -337,8 +337,8 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
     <div class="book">
       <div class="book-shadow"></div>
       <div class="book-pages"><span class="book-pages-text">Turn the page.</span></div>
-      <div class="book-cover">
-        <div class="book-cover-inner"><span class="book-cover-title">Begin</span></div>
+      <div class="bookbegin-cover">
+        <div class="bookbegin-cover-inner"><span class="bookbegin-cover-title">Begin</span></div>
       </div>
     </div>
   </div>
@@ -618,9 +618,32 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
       if(!file) return;
       const reader = new FileReader();
       reader.onload = function(ev){
-        state.draftPhoto = ev.target.result;
-        preview.src = ev.target.result;
-        preview.style.display = 'block';
+        // Downscale large photos so they stay small in storage.
+        const img = new Image();
+        img.onload = function(){
+          const MAX = 1200;
+          let w = img.width, h = img.height;
+          if(w > MAX || h > MAX){
+            if(w >= h){ h = Math.round(h * MAX / w); w = MAX; }
+            else { w = Math.round(w * MAX / h); h = MAX; }
+          }
+          let out = ev.target.result;
+          try{
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            out = canvas.toDataURL('image/jpeg', 0.82);
+          }catch(err){ /* fall back to the original on any failure */ }
+          state.draftPhoto = out;
+          preview.src = out;
+          preview.style.display = 'block';
+        };
+        img.onerror = function(){
+          state.draftPhoto = ev.target.result;
+          preview.src = ev.target.result;
+          preview.style.display = 'block';
+        };
+        img.src = ev.target.result;
       };
       reader.readAsDataURL(file);
     });
@@ -1061,5 +1084,7 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
 
 })();
 </script>
+<!-- Vercel Web Analytics (privacy-friendly; activate it in your Vercel dashboard) -->
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
