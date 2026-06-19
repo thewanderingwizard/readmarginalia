@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+img{max-width:100%;}
 html,body{height:100%;background:#E8DEC5;}
 body{
   font-family:'EB Garamond',Georgia,serif;
@@ -154,7 +155,7 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
 }
 .filter-tab.active{color:#3A2E1C;border-bottom-color:#9A7B3F;}
 .books-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(208px,1fr));gap:42px 34px;margin-top:48px;}
-.book-card{cursor:pointer;}
+.book-card{cursor:pointer;min-width:0;}
 .book-cover{height:288px;border:1px solid #C9B98F;padding:6px;background:#F4ECD8;box-sizing:border-box;overflow:hidden;}
 .book-cover img{width:100%;height:100%;object-fit:cover;display:block;}
 .book-cover-placeholder{
@@ -415,7 +416,7 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
   <div class="empty-text" id="empty-text" style="display:none;"></div>
 
   <div class="add-book-wrap">
-    <button class="add-book-btn" id="btn-go-add">Add a book by hand</button>
+    <button class="add-book-btn" id="btn-go-add">Add to your library</button>
   </div>
 
   <div class="why-footer-section" id="why-footer" style="display:none;">
@@ -427,7 +428,7 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
 <!-- ADD BOOK -->
 <section id="screen-add-book" class="screen" style="display:none;">
   <button class="back-link" id="btn-add-back">← Return to the shelf</button>
-  <div class="add-headline">Add a book by hand</div>
+  <div class="add-headline">Add to your library</div>
 
   <div class="form-field">
     <div class="form-field-label">Title</div>
@@ -476,8 +477,8 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
       <textarea id="ess-why" class="ess-textarea" rows="3" placeholder="What did it leave in you?"></textarea>
     </div>
     <div style="margin-bottom:22px;">
-      <div class="ess-field-label">When, or what life it belongs to</div>
-      <input id="ess-when" type="text" class="ess-input" placeholder="a season, an age, a place">
+      <div class="ess-field-label">The life it belongs to</div>
+      <input id="ess-when" type="text" class="ess-input" placeholder="Who were you when it found you?">
     </div>
     <button class="keep-btn" id="btn-keep-essential">Keep</button>
     <span class="kept-msg" id="kept-msg" style="display:none;">Kept.</span>
@@ -507,7 +508,7 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
   const FORMATS = ['Hardcover','Softcover','Digital','PDF','Audio'];
   const STATUS_LABELS = {reading:'Currently Reading',horizon:'On the Horizon',finished:'Finished',essential:'Essential Reads'};
   const STATUS_ORDER = ['reading','horizon','finished','essential'];
-  const FILTERS = [['all','All'],['reading','Currently Reading'],['horizon','On the Horizon'],['essential','Essential Reads'],['finished','Finished']];
+  const FILTERS = [['essential','Essential Reads'],['reading','Currently Reading'],['horizon','On the Horizon'],['finished','Finished']];
   const EMPTY_MAP = {
     all:'Your shelf is bare. Place the first book by hand.',
     reading:'You are not reading anything just now.',
@@ -522,7 +523,7 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
     books: [],
     onboarded: false,
     selectedId: null,
-    filter: 'all',
+    filter: 'reading',
     draftFormat: 'Softcover',
     draftStatus: 'horizon',
     draftPhoto: null,
@@ -757,6 +758,7 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
     state.books = [book].concat(state.books);
     state.onboarded = true;
     state.justPlaced = true;
+    state.filter = 'reading';
     state.draftPhoto = null;
     state.draftFormat = 'Softcover';
     persist();
@@ -884,6 +886,7 @@ textarea::placeholder,input::placeholder{color:#A89A7C;font-style:italic;}
       essentialWhy:'', essentialWhen:'',
     };
     state.books = [book].concat(state.books);
+    state.filter = book.status;
     state.draftPhoto=null;
     state.draftFormat='Softcover';
     state.draftStatus='horizon';
