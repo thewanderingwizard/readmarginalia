@@ -1,0 +1,1507 @@
+.screen,
+.formPage,
+.libraryPage,
+.detailPage,
+.accountPage {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.centeredScreen {
+  display: grid;
+  place-items: center;
+  padding: clamp(2rem, 6vw, 5rem) 1.5rem;
+}
+
+.atmosphere {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.geometry {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(76vw, 52rem);
+  height: auto;
+  color: rgba(208, 170, 95, 0.15);
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 1.6rem rgba(154, 123, 63, 0.04));
+  mask-image: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.18) 0 26%,
+    rgba(0, 0, 0, 0.52) 48%,
+    #000 74%
+  );
+}
+
+.geometryCeremonial {
+  width: min(88vw, 62rem);
+  color: rgba(218, 178, 96, 0.2);
+}
+
+.shelves {
+  position: absolute;
+  top: -2%;
+  bottom: -2%;
+  width: clamp(11rem, 20vw, 20rem);
+  opacity: 0.58;
+  background-position: center;
+  background-size: cover;
+  filter: saturate(0.72) sepia(0.16) contrast(0.94);
+}
+
+.shelves::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(19, 14, 10, 0.1), transparent 20% 78%, rgba(12, 8, 5, 0.3));
+  content: "";
+}
+
+.shelvesLeft {
+  left: 0;
+  background-image: url("/atmosphere/bookcase-left.webp");
+  mask-image: linear-gradient(to right, #000 15%, rgba(0, 0, 0, 0.88) 48%, transparent 100%);
+}
+
+.shelvesRight {
+  right: 0;
+  background-image: url("/atmosphere/bookcase-right.webp");
+  mask-image: linear-gradient(to left, #000 15%, rgba(0, 0, 0, 0.88) 48%, transparent 100%);
+}
+
+.welcome,
+.whyPanel,
+.formPanel,
+.libraryPanel,
+.detailPanel,
+.accountPanel {
+  position: relative;
+  z-index: 1;
+}
+
+.welcome {
+  display: flex;
+  width: min(100%, 42rem);
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.welcomeCrest {
+  width: clamp(10rem, 23vw, 15rem);
+  height: auto;
+  margin-bottom: 0.75rem;
+  border-radius: 50%;
+  filter: drop-shadow(0 1rem 1.75rem rgba(43, 33, 23, 0.12));
+  mix-blend-mode: normal;
+}
+
+.wordmark,
+.ritualTitle,
+.formTitle,
+.libraryWordmark,
+.detailTitle,
+.sectionTitle,
+.accountTitle {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 500;
+}
+
+.wordmark {
+  color: var(--ink-950);
+  font-size: clamp(4.5rem, 12vw, 7.5rem);
+  font-style: italic;
+  line-height: 0.95;
+  text-shadow: 0 0.08em 0.55em rgba(0, 0, 0, 0.72);
+}
+
+.rule {
+  width: 4rem;
+  height: 1px;
+  margin: 2rem auto;
+  background: var(--brass-600);
+}
+
+.welcomeText {
+  margin: 0.15rem 0;
+  color: var(--ink-700);
+  font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-shadow: 0 0 0.65rem rgba(0, 0, 0, 0.72);
+}
+
+.bookStage {
+  position: relative;
+  width: 13rem;
+  height: 11rem;
+  margin-top: 2rem;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  perspective: 78rem;
+}
+
+.bookStage:focus-visible {
+  outline: 2px solid var(--brass-700);
+  outline-offset: 0.5rem;
+}
+
+.bookStage:disabled {
+  cursor: default;
+}
+
+.bookObject {
+  position: absolute;
+  top: 0.55rem;
+  left: 50%;
+  width: 7.35rem;
+  height: 9.6rem;
+  transform: translateX(-50%) rotateX(7deg) rotateY(-10deg) rotateZ(-1deg);
+  transform-style: preserve-3d;
+  transition: transform 900ms cubic-bezier(0.2, 0.72, 0.18, 1);
+}
+
+.bookStage:hover .bookObject {
+  transform: translateX(-50%) translateY(-0.25rem) rotateX(5deg) rotateY(-14deg) rotateZ(-1deg);
+}
+
+.bookShadow {
+  position: absolute;
+  z-index: -2;
+  top: 72%;
+  left: -22%;
+  width: 145%;
+  height: 34%;
+  border-radius: 50%;
+  background: rgba(39, 24, 14, 0.25);
+  filter: blur(0.85rem);
+  transform: translateZ(-1.2rem) rotateX(82deg);
+  transition: width 1000ms ease, left 1000ms ease, opacity 1000ms ease;
+}
+
+.bookBackCover,
+.bookFrontCover,
+.bookPageBlock,
+.turningPage,
+.bookSpine {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-style: preserve-3d;
+}
+
+.bookBackCover {
+  border: 1px solid #2f1b12;
+  border-radius: 0.2rem 0.52rem 0.52rem 0.2rem;
+  background:
+    linear-gradient(108deg, rgba(32, 13, 6, 0.48), transparent 30% 78%, rgba(31, 13, 7, 0.38)),
+    url("/atmosphere/book-cover-leather-v2.webp") center / cover;
+  box-shadow: 0 1.15rem 1.7rem rgba(43, 33, 23, 0.28);
+  transform: translateZ(-0.42rem);
+}
+
+.bookPageBlock {
+  inset: 0.32rem 0.12rem 0.28rem 0.48rem;
+  overflow: visible;
+  border-radius: 0.08rem 0.38rem 0.38rem 0.08rem;
+  background:
+    repeating-linear-gradient(to bottom, #e5d4aa 0 1px, #f8edcf 1px 3px),
+    #efe0b9;
+  box-shadow: 0.22rem 0.12rem 0.18rem rgba(69, 45, 21, 0.2);
+  transform: translateZ(0.07rem);
+}
+
+.turningPage {
+  inset: 0;
+  border: 1px solid rgba(120, 89, 45, 0.22);
+  border-radius: 0.08rem 0.35rem 0.35rem 0.08rem;
+  background:
+    linear-gradient(90deg, rgba(126, 90, 38, 0.16), transparent 15%),
+    repeating-linear-gradient(to bottom, transparent 0 0.6rem, rgba(100, 72, 35, 0.1) 0.61rem 0.64rem),
+    #f4e7c6;
+  transform-origin: left center;
+  transition: transform 780ms cubic-bezier(0.25, 0.65, 0.18, 1);
+}
+
+.turningPageOne {
+  transform: translateZ(0.09rem);
+  transition-delay: 720ms;
+}
+
+.turningPageTwo {
+  transform: translateZ(0.12rem);
+  transition-delay: 960ms;
+}
+
+.bookSpine {
+  right: auto;
+  z-index: 5;
+  width: 0.7rem;
+  border-radius: 0.25rem 0 0 0.25rem;
+  background:
+    linear-gradient(to bottom, transparent 10%, #bc9651 10% 12%, transparent 12% 86%, #bc9651 86% 88%, transparent 88%),
+    linear-gradient(90deg, rgba(26, 12, 7, 0.9), rgba(112, 69, 43, 0.42) 55%, rgba(38, 17, 10, 0.88)),
+    url("/atmosphere/book-cover-leather-v2.webp") center / cover;
+  box-shadow: inset -0.14rem 0 0.18rem rgba(24, 12, 7, 0.36);
+  transform: translateZ(0.52rem);
+}
+
+.bookFrontCover {
+  z-index: 4;
+  transform: translateZ(0.56rem);
+  transform-origin: left center;
+  transition: transform 1050ms cubic-bezier(0.18, 0.72, 0.18, 1);
+}
+
+.bookCoverFace,
+.bookEndpaper {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  backface-visibility: hidden;
+}
+
+.bookCoverFace {
+  inset: 0;
+  border: 1px solid #352016;
+  border-radius: 0.2rem 0.55rem 0.55rem 0.2rem;
+  color: #e7cc88;
+  background:
+    radial-gradient(circle at 72% 26%, rgba(255, 231, 167, 0.08), transparent 24%),
+    linear-gradient(108deg, rgba(34, 14, 7, 0.22), transparent 32% 75%, rgba(26, 11, 6, 0.3)),
+    url("/atmosphere/book-cover-leather-v2.webp") center / cover;
+  box-shadow:
+    inset 0 0 0 0.36rem rgba(28, 13, 7, 0.42),
+    inset 0 0 1.2rem rgba(20, 8, 4, 0.34),
+    0.35rem 0.6rem 0.8rem rgba(43, 33, 23, 0.28);
+  transform: rotateY(0deg) translateZ(0.02rem);
+}
+
+.bookEndpaper {
+  inset: 0;
+  border: 1px solid #352016;
+  border-radius: 0.2rem 0.55rem 0.55rem 0.2rem;
+  background:
+    linear-gradient(90deg, rgba(34, 17, 8, 0.2), transparent 14%),
+    url("/atmosphere/book-endpaper-marbled-v2.webp") center / cover;
+  box-shadow:
+    inset 0 0 0 0.2rem rgba(53, 25, 10, 0.72),
+    inset 0 0 0 0.32rem rgba(211, 164, 76, 0.72),
+    inset 0 0 1rem rgba(20, 8, 4, 0.38);
+  transform: rotateY(180deg) translateZ(0.02rem);
+}
+
+.bookEndpaper::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0.72rem;
+  border: 1px solid rgba(230, 184, 89, 0.76);
+  border-radius: 50% 45% 50% 45% / 44% 52% 44% 52%;
+  box-shadow:
+    0 0 0 0.12rem rgba(64, 31, 12, 0.38),
+    inset 0 0 0.7rem rgba(232, 187, 91, 0.14);
+  content: "";
+  opacity: 0.72;
+}
+
+.bookEndpaper::before {
+  position: absolute;
+  z-index: 2;
+  inset: 0.22rem 0.18rem 0.22rem 0.32rem;
+  border: 1px solid rgba(112, 77, 35, 0.42);
+  border-radius: 0.08rem 0.3rem 0.3rem 0.08rem;
+  background:
+    linear-gradient(90deg, rgba(89, 54, 22, 0.2), transparent 16%),
+    repeating-linear-gradient(to bottom, #e2cf9f 0 1px, #f5e8c6 1px 3px),
+    #efe0b9;
+  box-shadow:
+    0.14rem 0.08rem 0.18rem rgba(31, 16, 7, 0.3),
+    inset 0.18rem 0 0.3rem rgba(87, 52, 20, 0.18);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 420ms cubic-bezier(0.22, 0.72, 0.18, 1);
+}
+
+.coverFiligree,
+.beginLabel,
+.coverFlourish {
+  display: block;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.coverFiligree {
+  top: 1.5rem;
+  font-size: 1rem;
+}
+
+.beginLabel {
+  top: 3.35rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.6rem;
+  font-style: italic;
+  letter-spacing: 0.03em;
+}
+
+.coverFlourish {
+  bottom: 1.55rem;
+  width: 80%;
+  font-size: 0.42rem;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+}
+
+.bookStage.bookOpening .bookObject {
+  transform: translateX(calc(-50% + 3.4rem)) translateY(-0.4rem) rotateX(3deg) rotateY(1deg) rotateZ(0deg) scale(1.06);
+}
+
+.bookOpening .bookFrontCover {
+  transform: translateZ(0.56rem) rotateY(-158deg);
+}
+
+.bookOpening .bookPageBlock {
+  z-index: 10;
+}
+
+.bookOpening .bookEndpaper::before {
+  transform: scaleX(1);
+  transition-delay: 1420ms;
+}
+
+.bookOpening .turningPageOne {
+  transform: rotateY(-176deg) translateZ(-0.14rem);
+  transition-delay: 720ms;
+}
+
+.bookOpening .turningPageTwo {
+  transform: rotateY(-158deg) translateZ(-0.1rem);
+  transition-delay: 960ms;
+}
+
+.bookOpening .bookShadow {
+  left: -55%;
+  width: 205%;
+  opacity: 0.72;
+}
+
+.loading {
+  position: relative;
+  z-index: 1;
+  color: var(--ink-500);
+  font-style: italic;
+}
+
+.eyebrow,
+.fieldLabel,
+.detailFormat,
+.cardMeta,
+.reflectionDate {
+  color: var(--brass-700);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.whyPanel {
+  width: min(100%, 39rem);
+}
+
+.ritualTitle {
+  margin-top: 1rem;
+  color: var(--ink-950);
+  font-size: clamp(3.5rem, 9vw, 5.75rem);
+  line-height: 1;
+  text-shadow: 0 0 1rem rgba(0, 0, 0, 0.68);
+}
+
+.field {
+  display: block;
+  margin-top: 2rem;
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: 0.65rem;
+}
+
+.lineInput,
+.lineTextarea,
+.ritualTextarea {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  color: var(--ink-900);
+  background: transparent;
+  font-family: var(--font-text), Georgia, serif;
+}
+
+.lineInput {
+  padding: 0.5rem 0.15rem 0.75rem;
+  font-size: 1.3rem;
+}
+
+.lineTextarea,
+.ritualTextarea {
+  display: block;
+  padding: 0.65rem 0.15rem 0.8rem;
+  resize: vertical;
+  font-size: 1.25rem;
+  line-height: 1.55;
+}
+
+.ritualTextarea {
+  margin-top: 1.75rem;
+  color: var(--ink-950);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-style: italic;
+}
+
+.lineInput::placeholder,
+.lineTextarea::placeholder,
+.ritualTextarea::placeholder,
+.reflectionTextarea::placeholder {
+  color: var(--ink-700);
+  font-style: italic;
+  opacity: 0.72;
+}
+
+.whyFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.whyFooter p {
+  margin: 0;
+  color: var(--ink-500);
+  font-style: italic;
+}
+
+.continueButton,
+.backButton,
+.textButton,
+.shareToggle {
+  border: 0;
+  color: var(--brass-700);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-text), Georgia, serif;
+}
+
+.continueButton,
+.backButton {
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--brass-600);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.formPage,
+.detailPage,
+.libraryPage,
+.accountPage {
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.25rem, 4vw, 2rem) 6rem;
+}
+
+.formPanel {
+  width: min(100%, 40rem);
+  margin: 0 auto;
+}
+
+.formTitle {
+  margin-top: 0.85rem;
+  font-size: clamp(2.75rem, 7vw, 4rem);
+  line-height: 1.05;
+}
+
+.formIntroduction {
+  max-width: 34rem;
+  margin: 1.25rem 0 0;
+  color: var(--ink-700);
+  font-size: 1.25rem;
+}
+
+.bookForm {
+  margin-top: 2.75rem;
+}
+
+.choiceFieldset {
+  min-width: 0;
+  margin: 2rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.choice {
+  min-height: 2.7rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink-700);
+  background: rgba(10, 7, 5, 0.28);
+  cursor: pointer;
+  font-family: var(--font-text), Georgia, serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.choice:hover,
+.choiceActive {
+  border-color: var(--brass-600);
+  color: var(--ink-900);
+  background: rgba(154, 123, 63, 0.12);
+}
+
+.photoField {
+  margin-top: 0.75rem;
+}
+
+.photoPreview {
+  width: 9.5rem;
+  aspect-ratio: 0.72;
+  margin-bottom: 0.8rem;
+  padding: 0.3rem;
+  border: 1px solid var(--line);
+  background: var(--parchment-50);
+}
+
+.photoPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.fileButton,
+.secondaryButton {
+  display: inline-flex;
+  min-height: 2.8rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.1rem;
+  border: 1px solid var(--line);
+  color: var(--ink-700);
+  background: rgba(10, 7, 5, 0.3);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.fileButton input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.textButton {
+  font-size: 0.95rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+.fieldHint,
+.savedNote {
+  margin: 0.65rem 0 0;
+  color: var(--ink-500);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.error {
+  margin: 0.75rem 0 0;
+  color: var(--oxblood-700);
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.primaryButton,
+.secondaryButton {
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--font-text), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.primaryButton {
+  min-height: 3.1rem;
+  margin-top: 2rem;
+  padding: 0.8rem 1.7rem;
+  border: 1px solid var(--brass-700);
+  color: #17120e;
+  background: var(--brass-700);
+}
+
+.primaryButton:hover {
+  background: var(--brass-400);
+}
+
+.libraryPanel {
+  width: min(100%, 61rem);
+  margin: 0 auto;
+}
+
+.libraryHeader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.65rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+}
+
+.libraryHeader p {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  color: var(--ink-700);
+  background: transparent;
+  box-shadow: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.libraryWordmark {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  color: var(--ink-950);
+  background: transparent;
+  box-shadow: none;
+  font-size: 2.8rem;
+  font-style: italic;
+  line-height: 1;
+}
+
+.accountButton {
+  padding: 0.35rem 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  color: var(--ink-500);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-text), Georgia, serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.accountButton:hover,
+.accountButton:focus-visible {
+  border-bottom-color: var(--brass-600);
+  color: var(--ink-900);
+}
+
+.banner {
+  position: relative;
+  display: flex;
+  width: min(100%, 40rem);
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.75rem auto 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--line);
+  background: rgba(12, 8, 5, 0.58);
+  text-align: center;
+}
+
+.banner p {
+  margin: 0;
+  font-style: italic;
+}
+
+.banner button,
+.filters button {
+  border: 0;
+  color: var(--ink-500);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-text), Georgia, serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.banner button {
+  position: absolute;
+  right: 1.25rem;
+}
+
+.filters {
+  display: grid;
+  width: min(100%, 38rem);
+  overflow: visible;
+  grid-template-areas:
+    "essential horizon"
+    "reading finished";
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem 1.25rem;
+  margin: 2rem auto 0;
+  padding-bottom: 0.3rem;
+}
+
+.filters button[data-filter="essential"] {
+  grid-area: essential;
+}
+
+.filters button[data-filter="horizon"] {
+  grid-area: horizon;
+}
+
+.filters button[data-filter="reading"] {
+  grid-area: reading;
+}
+
+.filters button[data-filter="finished"] {
+  grid-area: finished;
+}
+
+.filters button {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid transparent;
+  text-align: center;
+}
+
+.filters button:hover,
+.filters .filterActive {
+  border-bottom-color: var(--brass-600);
+  color: var(--ink-900);
+}
+
+.bookGrid {
+  display: flex;
+  width: min(100%, 31rem);
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2.8rem 2rem;
+  margin: 2.75rem auto 0;
+}
+
+.bookCard {
+  width: 9rem;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.bookCover {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 9rem;
+  height: 12.5rem;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 1.35rem;
+  border: 1px solid rgba(154, 123, 63, 0.46);
+  background: linear-gradient(145deg, #f5ecd6, #e8d9b8);
+  box-shadow: 0 0.9rem 1.6rem rgba(43, 33, 23, 0.08);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.bookCover::after {
+  position: absolute;
+  inset: 0.7rem;
+  border: 1px solid rgba(154, 123, 63, 0.35);
+  content: "";
+  pointer-events: none;
+}
+
+.bookCover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bookCover.photographedCover {
+  padding: 0;
+  border: 0;
+  border-radius: 0.12rem 0.2rem 0.2rem 0.12rem;
+  background: transparent;
+  box-shadow:
+    -0.18rem 0 0 rgba(42, 28, 18, 0.38),
+    0 0.9rem 1.6rem rgba(43, 33, 23, 0.18);
+}
+
+.photographedCover::after {
+  display: none;
+}
+
+.accountPanel {
+  width: min(100%, 47rem);
+  margin: 0 auto;
+}
+
+.accountTitle {
+  margin-top: 0.85rem;
+  font-size: clamp(3rem, 8vw, 4.75rem);
+  line-height: 1;
+}
+
+.accountIntroduction {
+  max-width: 38rem;
+  margin: 1.25rem 0 0;
+  color: var(--ink-700);
+  font-size: 1.3rem;
+}
+
+.accountSection {
+  margin-top: 3rem;
+  padding: 2rem;
+  border: 1px solid var(--line);
+  background: rgba(18, 12, 8, 0.38);
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.09);
+}
+
+.accountSection h2 {
+  margin: 0.65rem 0 0;
+  color: var(--ink-900);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.9rem, 5vw, 2.7rem);
+  font-weight: 500;
+  line-height: 1.08;
+}
+
+.accountSection > p:not(.eyebrow) {
+  max-width: 38rem;
+  margin: 1rem 0 0;
+  color: var(--ink-700);
+  line-height: 1.6;
+}
+
+.accountSection .secondaryButton {
+  margin-top: 1.5rem;
+}
+
+.dangerSection {
+  border-color: rgba(136, 73, 58, 0.72);
+  background: rgba(74, 34, 27, 0.2);
+}
+
+.deleteAccountForm {
+  margin-top: 1.7rem;
+}
+
+.deleteAccountForm .destructiveButton {
+  margin-top: 1.3rem;
+}
+
+.bookCard:hover .bookCover {
+  box-shadow: 0 1.1rem 2rem rgba(43, 33, 23, 0.15);
+  transform: translateY(-3px);
+}
+
+.placeholderCover {
+  flex-direction: column;
+  color: #2b2117;
+  text-align: center;
+}
+
+.coverTitle {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.65rem;
+  line-height: 1.05;
+}
+
+.coverRule {
+  width: 1.8rem;
+  height: 1px;
+  margin: 1rem 0;
+  background: var(--brass-600);
+}
+
+.coverAuthor {
+  position: relative;
+  z-index: 1;
+  color: #5a4c37;
+  font-style: italic;
+}
+
+.cardTitle,
+.cardMeta {
+  display: block;
+}
+
+.cardTitle {
+  margin-top: 0.8rem;
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.cardMeta {
+  margin-top: 0.4rem;
+  font-size: 0.63rem;
+}
+
+.emptyShelf,
+.emptyReflection {
+  margin: 4rem auto 0;
+  color: var(--ink-500);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.addBookWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 3.5rem;
+}
+
+.secondaryButton:hover,
+.fileButton:hover {
+  border-color: var(--brass-600);
+  background: rgba(154, 123, 63, 0.1);
+}
+
+.whyMemory {
+  position: relative;
+  width: min(100%, 46rem);
+  margin-top: 5rem;
+  margin-inline: auto;
+  padding: 3.2rem 2rem 1rem;
+  text-align: center;
+}
+
+.whyMemory::before,
+.whyMemory::after {
+  position: absolute;
+  top: 1rem;
+  width: calc(50% - 2.4rem);
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--brass-600));
+  content: "";
+  opacity: 0.7;
+}
+
+.whyMemory::before {
+  left: 0;
+}
+
+.whyMemory::after {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+.whyOrnament {
+  position: absolute;
+  top: 0.3rem;
+  left: 50%;
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--brass-600);
+  border-radius: 50%;
+  place-items: center;
+  color: var(--brass-400);
+  font-size: 0.58rem;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.whyOrnament::first-letter {
+  transform: rotate(-45deg);
+}
+
+.whyMemory blockquote {
+  max-width: 40rem;
+  margin: 1.15rem auto 0;
+  color: var(--ink-900);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.55rem, 4vw, 2.2rem);
+  font-style: italic;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.whyMemory cite {
+  display: block;
+  margin-top: 1rem;
+  color: var(--ink-500);
+  font-size: 0.66rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.detailPanel {
+  width: min(100%, 47rem);
+  margin: 0 auto;
+}
+
+.detailTopbar {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.bookActions {
+  position: relative;
+  z-index: 8;
+}
+
+.menuButton {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0 0 0.35rem;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  place-items: center;
+  color: var(--ink-900);
+  background: rgba(15, 10, 7, 0.72);
+  box-shadow: 0 0.45rem 1.1rem rgba(0, 0, 0, 0.2);
+  font-family: Georgia, serif;
+  font-size: 1.12rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.menuButton:hover,
+.menuButton[aria-expanded="true"] {
+  border-color: var(--brass-600);
+  background: rgba(45, 30, 18, 0.94);
+}
+
+.bookMenu {
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  right: 0;
+  width: 12rem;
+  padding: 0.38rem;
+  border: 1px solid var(--line);
+  border-radius: 0.2rem;
+  background: #21170f;
+  box-shadow: 0 1rem 2.6rem rgba(0, 0, 0, 0.42);
+}
+
+.bookMenu button {
+  width: 100%;
+  padding: 0.76rem 0.82rem;
+  border: 0;
+  border-radius: 0.12rem;
+  color: var(--ink-900);
+  background: transparent;
+  font-family: var(--font-text), Georgia, serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-align: left;
+}
+
+.bookMenu button:hover,
+.bookMenu button:focus-visible {
+  background: rgba(154, 123, 63, 0.16);
+}
+
+.bookMenu .deleteMenuItem {
+  color: #dc9a88;
+}
+
+.dialogBackdrop {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  display: grid;
+  padding: 1rem;
+  place-items: center;
+  background: rgba(6, 4, 3, 0.78);
+  backdrop-filter: blur(4px);
+}
+
+.deleteDialog {
+  width: min(100%, 29rem);
+  padding: clamp(1.6rem, 5vw, 2.35rem);
+  border: 1px solid var(--line);
+  border-radius: 0.24rem;
+  background:
+    linear-gradient(rgba(33, 23, 15, 0.97), rgba(23, 16, 11, 0.99)),
+    url("/atmosphere/book-cover-leather-v2.webp") center / cover;
+  box-shadow: 0 1.8rem 5rem rgba(0, 0, 0, 0.6);
+}
+
+.deleteDialog h2 {
+  margin: 0.65rem 0 0;
+  color: var(--ink-900);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.85rem, 6vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.08;
+}
+
+.deleteDialog > p:not(.eyebrow) {
+  margin: 1rem 0 0;
+  color: var(--ink-700);
+  line-height: 1.55;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.7rem;
+}
+
+.cancelButton,
+.destructiveButton {
+  min-height: 2.75rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.14rem;
+  font-family: var(--font-text), Georgia, serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.cancelButton {
+  color: var(--ink-900);
+  background: transparent;
+}
+
+.destructiveButton {
+  border-color: #88493a;
+  color: #fff4dd;
+  background: #743a2e;
+}
+
+.cancelButton:hover {
+  border-color: var(--brass-600);
+  background: rgba(154, 123, 63, 0.1);
+}
+
+.destructiveButton:hover {
+  background: #8b493a;
+}
+
+.detailHeader {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.bookCoverLarge {
+  flex: 0 0 11rem;
+  width: 11rem;
+  max-width: 11rem;
+  height: 15rem;
+}
+
+.detailMetadata {
+  flex: 1 1 18rem;
+}
+
+.detailTitle {
+  font-size: clamp(2.75rem, 7vw, 4.5rem);
+  line-height: 1;
+}
+
+.detailAuthor {
+  margin: 0.8rem 0 0;
+  color: var(--ink-700);
+  font-size: 1.35rem;
+  font-style: italic;
+}
+
+.detailFormat {
+  margin: 0.5rem 0 0;
+}
+
+.detailSection,
+.essentialBox,
+.margins {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+
+.essentialBox {
+  padding: 2rem;
+  border: 1px solid var(--line);
+  background: rgba(154, 123, 63, 0.06);
+}
+
+.essentialBox h2 {
+  margin: 0.75rem 0 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.sectionTitle {
+  font-size: 2.4rem;
+  font-style: italic;
+}
+
+.sectionIntroduction {
+  margin: 0.4rem 0 0;
+  color: var(--ink-500);
+  font-style: italic;
+}
+
+.reflectionComposer {
+  margin-top: 1.75rem;
+}
+
+.reflectionTextarea {
+  width: 100%;
+  padding: 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink-900);
+  background: rgba(10, 7, 5, 0.42);
+  font-family: var(--font-text), Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.composerActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+.composerActions .primaryButton {
+  margin-top: 0;
+}
+
+.shareToggle {
+  padding: 0.5rem 0;
+  color: var(--ink-500);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.shareToggleActive {
+  color: var(--olive-700);
+}
+
+.reflectionList {
+  margin-top: 2.5rem;
+}
+
+.reflection {
+  padding: 0.2rem 0 1.75rem 1.3rem;
+  border-left: 2px solid var(--brass-600);
+}
+
+.reflection + .reflection {
+  margin-top: 1.75rem;
+}
+
+.reflection p {
+  margin: 0.6rem 0 0;
+  font-size: 1.2rem;
+  white-space: pre-wrap;
+}
+
+.reflection .reflectionDate {
+  margin-top: 0;
+  font-size: 0.65rem;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .shelves {
+    display: none;
+  }
+
+  .geometry {
+    width: min(116vw, 48rem);
+  }
+
+  .geometryCeremonial {
+    width: min(132vw, 52rem);
+  }
+}
+
+@media (max-width: 560px) {
+  .centeredScreen,
+  .formPage,
+  .detailPage,
+  .libraryPage,
+  .accountPage {
+    padding-inline: 1rem;
+  }
+
+  .welcomeCrest {
+    width: min(48vw, 12rem);
+  }
+
+  .wordmark {
+    font-size: clamp(4rem, 20vw, 5.5rem);
+  }
+
+  .whyFooter {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .libraryHeader {
+    align-items: center;
+  }
+
+  .filters {
+    display: grid;
+    width: min(100%, 22rem);
+    gap: 0.45rem 0.65rem;
+    margin: 2rem auto 0;
+  }
+
+  .filters button {
+    width: 100%;
+    padding-inline: 0.3rem;
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    white-space: normal;
+  }
+
+  .banner {
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .banner button {
+    position: static;
+  }
+
+  .continueButton,
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+
+  .bookGrid {
+    width: min(100%, 17.5rem);
+    justify-content: center;
+    gap: 2rem 1rem;
+  }
+
+  .bookCard {
+    width: 8.25rem;
+  }
+
+  .bookCover {
+    max-width: 8.25rem;
+    height: 11.5rem;
+    padding: 1rem;
+  }
+
+  .bookCoverLarge {
+    width: 9.5rem;
+    max-width: 9.5rem;
+    height: 13rem;
+  }
+
+  .coverTitle {
+    font-size: 1.3rem;
+  }
+
+  .detailHeader {
+    align-items: flex-start;
+  }
+
+  .essentialBox {
+    padding: 1.2rem;
+  }
+
+  .accountSection {
+    padding: 1.2rem;
+  }
+
+  .composerActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bookObject,
+  .bookFrontCover,
+  .turningPage,
+  .bookShadow,
+  .bookCover {
+    transition: none;
+  }
+}
