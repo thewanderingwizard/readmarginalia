@@ -1,0 +1,138 @@
+.page {
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: clamp(2rem, 6vw, 5rem) 1.25rem;
+  place-items: center;
+  background:
+    linear-gradient(90deg, rgba(12, 8, 5, 0.94), rgba(25, 18, 11, 0.7) 32% 68%, rgba(12, 8, 5, 0.94)),
+    url("/atmosphere/bookcase-left.webp") left center / min(33vw, 31rem) 100% no-repeat,
+    url("/atmosphere/bookcase-right.webp") right center / min(33vw, 31rem) 100% no-repeat,
+    #17110c;
+}
+
+.geometry {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(80vw, 48rem);
+  height: auto;
+  color: rgba(196, 154, 77, 0.14);
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 1.6rem rgba(154, 123, 63, 0.035));
+}
+
+.panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 35rem);
+  padding: clamp(1.6rem, 5vw, 3rem);
+  border: 1px solid var(--line);
+  background: rgba(19, 13, 9, 0.9);
+  box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+.crest {
+  width: 8rem;
+  height: auto;
+  margin-bottom: 1.5rem;
+  border-radius: 50%;
+}
+
+.title {
+  margin: 0.65rem 0 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.6rem, 8vw, 4rem);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.introduction {
+  max-width: 28rem;
+  margin: 1.25rem auto 0;
+  color: var(--ink-700);
+  font-size: 1.08rem;
+  line-height: 1.5;
+}
+
+.form {
+  margin-top: 2rem;
+}
+
+.field {
+  display: block;
+  color: var(--brass-400);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.19em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.field input {
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.8rem 0.15rem;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  color: var(--ink-900);
+  background: transparent;
+  font-family: var(--font-text), Georgia, serif;
+  font-size: 1.2rem;
+}
+
+.submit {
+  width: 100%;
+  min-height: 3.2rem;
+  margin-top: 1.7rem;
+  border: 1px solid var(--brass-600);
+  color: #17120e;
+  background: var(--brass-700);
+  font-family: var(--font-text), Georgia, serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.submit:hover {
+  background: var(--brass-400);
+}
+
+.notice,
+.error {
+  margin: 1.8rem 0 0;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  color: var(--ink-700);
+  background: rgba(154, 123, 63, 0.08);
+  font-style: italic;
+}
+
+.error {
+  color: #dc9a88;
+}
+
+.returnLink {
+  display: inline-block;
+  margin-top: 2rem;
+  color: var(--ink-500);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.returnLink:hover {
+  color: var(--brass-400);
+}
+
+@media (max-width: 700px) {
+  .page {
+    background: #17110c;
+  }
+}
