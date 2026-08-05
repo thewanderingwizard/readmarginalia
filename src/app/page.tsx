@@ -17,8 +17,8 @@ export default function Home() {
         <div className="threshold__invitation">
           <div className="rule" aria-hidden="true" />
           <p className="threshold__promise">
-            A quiet place to tend the books that shape you—and to remember what
-            moved you when the page has turned.
+            A quiet place to tend to the books that shape you, while remembering
+            what moved you when the pages turned.
           </p>
           <blockquote className="threshold__quotation">
             <p>“If one cannot enjoy reading a book over and over again, there is no use in reading it at all.”</p>
