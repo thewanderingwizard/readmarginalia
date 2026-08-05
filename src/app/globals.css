@@ -58,54 +58,55 @@ a {
 
 .threshold {
   position: relative;
-  display: grid;
   min-height: 100vh;
-  place-items: center;
-  overflow: hidden;
-  padding: clamp(2rem, 5vw, 5rem) 1.5rem;
+  overflow-x: clip;
+  padding: 0 1.5rem;
 }
 
 .threshold__geometry {
   position: fixed;
-  inset: 50% auto auto 50%;
-  width: min(78vw, 52rem);
-  aspect-ratio: 1;
-  border: 1px solid rgba(154, 123, 63, 0.1);
-  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  width: min(84vw, 55rem);
+  height: auto;
+  color: rgba(196, 154, 77, 0.13);
   pointer-events: none;
   transform: translate(-50%, -50%);
-}
-
-.threshold__geometry::before,
-.threshold__geometry::after {
-  position: absolute;
-  inset: 14%;
-  border: 1px solid rgba(154, 123, 63, 0.08);
-  content: "";
-  transform: rotate(45deg);
-}
-
-.threshold__geometry::after {
-  transform: rotate(22.5deg);
+  filter: drop-shadow(0 0 2rem rgba(154, 123, 63, 0.035));
 }
 
 .threshold__content {
   position: relative;
   z-index: 1;
-  display: flex;
   width: min(100%, 42rem);
-  align-items: center;
-  flex-direction: column;
+  margin: 0 auto;
   text-align: center;
 }
 
+.threshold__ceremony {
+  position: relative;
+  min-height: max(42rem, 100svh);
+}
+
+.threshold__eyebrow {
+  position: absolute;
+  top: clamp(2.25rem, 7vh, 4.5rem);
+  left: 50%;
+  width: 100%;
+  letter-spacing: clamp(0.28em, 0.8vw, 0.5em);
+  transform: translateX(-50%);
+}
+
 .threshold__crest {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: clamp(13rem, 36vw, 25rem);
   height: auto;
-  margin: 0.5rem 0 0;
   border-radius: 50%;
   filter: drop-shadow(0 1.2rem 2rem rgba(43, 33, 23, 0.12));
   mix-blend-mode: normal;
+  transform: translate(-50%, -50%);
 }
 
 .eyebrow {
@@ -126,10 +127,25 @@ a {
 }
 
 .wordmark {
-  margin-top: 0.35rem;
+  position: absolute;
+  bottom: clamp(1.25rem, 3.5vh, 2.5rem);
+  left: 50%;
+  width: 100%;
+  font-family: var(--font-wordmark), "Bodoni MT", Didot, serif;
   font-size: clamp(4rem, 12vw, 7.25rem);
   font-style: italic;
+  font-variation-settings: "opsz" 96, "wght" 500;
   line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-rendering: optimizeLegibility;
+  transform: translateX(-50%);
+}
+
+.threshold__invitation {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: clamp(1.5rem, 5vh, 3.5rem) 0 clamp(4rem, 10vh, 7rem);
 }
 
 .display-title {
@@ -152,11 +168,28 @@ a {
   font-size: clamp(1.2rem, 3vw, 1.5rem);
 }
 
-.threshold__principle {
-  margin: 1rem 0 0;
+.threshold__quotation {
+  max-width: 35rem;
+  margin: 1.5rem 0 0;
   color: var(--ink-500);
   font-size: 1rem;
   font-style: italic;
+}
+
+.threshold__quotation p {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.threshold__quotation cite {
+  display: block;
+  margin-top: 0.55rem;
+  color: var(--brass-700);
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }
 
 .threshold__actions {
@@ -366,6 +399,14 @@ a {
 @media (max-width: 520px) {
   .threshold {
     padding-inline: 1rem;
+  }
+
+  .threshold__ceremony {
+    min-height: max(38rem, 100svh);
+  }
+
+  .threshold__eyebrow {
+    letter-spacing: 0.24em;
   }
 
   .threshold__crest {

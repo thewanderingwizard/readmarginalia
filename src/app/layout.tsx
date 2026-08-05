@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, EB_Garamond } from "next/font/google";
+import { Bodoni_Moda, Cormorant_Garamond, EB_Garamond } from "next/font/google";
 import "./globals.css";
 
 const display = Cormorant_Garamond({
@@ -16,6 +16,15 @@ const text = EB_Garamond({
   display: "swap",
   weight: ["400", "500", "600"],
   style: ["normal", "italic"],
+});
+
+const wordmark = Bodoni_Moda({
+  variable: "--font-wordmark",
+  subsets: ["latin"],
+  display: "swap",
+  weight: "variable",
+  style: ["normal", "italic"],
+  axes: ["opsz"],
 });
 
 export const metadata: Metadata = {
@@ -40,7 +49,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${display.variable} ${text.variable}`}>
+    <html lang="en" className={`${display.variable} ${text.variable} ${wordmark.variable}`}>
       <head>
         <meta name="color-scheme" content="dark" />
       </head>

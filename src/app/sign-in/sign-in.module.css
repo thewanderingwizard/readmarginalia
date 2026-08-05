@@ -17,23 +17,10 @@
   top: 50%;
   left: 50%;
   width: min(80vw, 48rem);
-  aspect-ratio: 1;
-  border: 1px solid rgba(196, 154, 77, 0.14);
-  border-radius: 50%;
+  height: auto;
+  color: rgba(196, 154, 77, 0.14);
   transform: translate(-50%, -50%);
-}
-
-.geometry::before,
-.geometry::after {
-  position: absolute;
-  inset: 14%;
-  border: 1px solid rgba(196, 154, 77, 0.12);
-  content: "";
-  transform: rotate(45deg);
-}
-
-.geometry::after {
-  transform: rotate(22.5deg);
+  filter: drop-shadow(0 0 1.6rem rgba(154, 123, 63, 0.035));
 }
 
 .panel {

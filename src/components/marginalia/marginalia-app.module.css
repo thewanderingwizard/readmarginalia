@@ -115,10 +115,14 @@
 
 .wordmark {
   color: var(--ink-950);
+  font-family: var(--font-wordmark), "Bodoni MT", Didot, serif;
   font-size: clamp(4.5rem, 12vw, 7.5rem);
   font-style: italic;
+  font-variation-settings: "opsz" 96, "wght" 500;
   line-height: 0.95;
+  letter-spacing: -0.04em;
   text-shadow: 0 0.08em 0.55em rgba(0, 0, 0, 0.72);
+  text-rendering: optimizeLegibility;
 }
 
 .rule {
@@ -711,9 +715,13 @@
   color: var(--ink-950);
   background: transparent;
   box-shadow: none;
+  font-family: var(--font-wordmark), "Bodoni MT", Didot, serif;
   font-size: 2.8rem;
   font-style: italic;
+  font-variation-settings: "opsz" 96, "wght" 500;
   line-height: 1;
+  letter-spacing: -0.035em;
+  text-rendering: optimizeLegibility;
 }
 
 .accountButton {
@@ -1009,6 +1017,119 @@
 .fileButton:hover {
   border-color: var(--brass-600);
   background: rgba(154, 123, 63, 0.1);
+}
+
+.shelfQuotation {
+  position: relative;
+  width: min(100%, 54rem);
+  margin: 5.25rem auto 0;
+  padding: 3.1rem clamp(1rem, 5vw, 4rem) 2.5rem;
+  border-top: 1px solid rgba(154, 123, 63, 0.42);
+  border-bottom: 1px solid rgba(154, 123, 63, 0.25);
+  text-align: center;
+  animation: quotationReveal 520ms ease both;
+}
+
+.shelfQuotation::before,
+.shelfQuotation::after {
+  position: absolute;
+  top: -1px;
+  width: 18%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--brass-400));
+  content: "";
+}
+
+.shelfQuotation::before {
+  left: 0;
+}
+
+.shelfQuotation::after {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+.quoteOrnament {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: grid;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid var(--brass-600);
+  border-radius: 50%;
+  place-items: center;
+  color: var(--brass-400);
+  background: var(--parchment-100);
+  font-size: 0.68rem;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.quoteLabel {
+  margin: 0;
+  color: var(--brass-600);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.shelfQuotation blockquote {
+  max-width: 47rem;
+  margin: 1.25rem auto 0;
+  color: var(--ink-900);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.35rem, 3.1vw, 2rem);
+  font-style: italic;
+  line-height: 1.42;
+  text-wrap: balance;
+}
+
+.shelfQuotation figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem 0.75rem;
+  margin-top: 1.25rem;
+  color: var(--ink-500);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.shelfQuotation figcaption a {
+  color: var(--brass-600);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: none;
+}
+
+.shelfQuotation figcaption a:hover {
+  color: var(--ink-900);
+  text-decoration: underline;
+  text-underline-offset: 0.22rem;
+}
+
+@keyframes quotationReveal {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.shelfQuotation + .whyMemory {
+  margin-top: 2.75rem;
 }
 
 .whyMemory {
@@ -1503,5 +1624,9 @@
   .bookShadow,
   .bookCover {
     transition: none;
+  }
+
+  .shelfQuotation {
+    animation: none;
   }
 }

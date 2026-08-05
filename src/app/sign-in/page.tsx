@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Crest } from "@/components/brand/crest";
+import { MetatronsCube } from "@/components/brand/metatrons-cube";
 import { requestMagicLink } from "./actions";
 import styles from "./sign-in.module.css";
 
@@ -19,7 +20,7 @@ export default async function SignInPage({
 
   return (
     <main className={styles.page}>
-      <div className={styles.geometry} aria-hidden="true" />
+      <MetatronsCube className={styles.geometry} />
       <section className={styles.panel} aria-labelledby="sign-in-title">
         <Crest className={styles.crest} priority />
         <p className="eyebrow">Invitation-only Alpha</p>

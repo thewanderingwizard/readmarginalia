@@ -55,15 +55,17 @@ export default async function InvitationsPage({
   const admin = createMarginaliaAdminClient();
   const parameters = await searchParams;
   let invitations: Invitation[] = [];
+  let invitationCount = 0;
   let loadFailed = false;
 
   if (admin) {
-    const { data: records, error: invitationError } = await admin
+    const { data: records, error: invitationError, count } = await admin
       .from("invitations")
-      .select("id,email,status,created_at,accepted_at")
+      .select("id,email,status,created_at,accepted_at", { count: "exact" })
       .order("created_at", { ascending: false })
-      .limit(100);
+      .limit(250);
     invitations = (records as Invitation[] | null) ?? [];
+    invitationCount = count ?? invitations.length;
     loadFailed = Boolean(invitationError);
   } else {
     loadFailed = true;
@@ -112,7 +114,7 @@ export default async function InvitationsPage({
               <p className={styles.eyebrow}>Private record</p>
               <h2 id="ledger-title">Invitation ledger</h2>
             </div>
-            <span>{invitations.length} recorded</span>
+            <span>{invitationCount} recorded</span>
           </div>
 
           {loadFailed ? <p className={styles.error}>The invitation ledger could not be loaded.</p> : null}

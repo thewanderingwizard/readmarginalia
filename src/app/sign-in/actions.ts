@@ -2,6 +2,7 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { resolveRequestOrigin } from "@/lib/request-origin";
 import { createClient } from "@/lib/supabase/server";
 
 export async function requestMagicLink(formData: FormData) {
@@ -12,7 +13,7 @@ export async function requestMagicLink(formData: FormData) {
   }
 
   const requestHeaders = await headers();
-  const origin = requestHeaders.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const origin = resolveRequestOrigin(requestHeaders);
   const callback = new URL("/auth/confirm", origin);
   callback.searchParams.set("next", "/app");
 

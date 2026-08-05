@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { MarginaliaApp } from "@/components/marginalia/marginalia-app";
 import { isMarginaliaAdmin } from "@/lib/admin";
 import { loadRemoteLibrary } from "@/lib/marginalia/load-library";
+import { randomMarginaliaQuoteId } from "@/lib/marginalia/quotes";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -31,6 +32,7 @@ export default async function AppPage({
     <MarginaliaApp
       userId={data.user.id}
       initialLibrary={library}
+      initialQuoteId={randomMarginaliaQuoteId()}
       initialAccountError={accountError}
       isAdmin={isMarginaliaAdmin(data.user)}
     />

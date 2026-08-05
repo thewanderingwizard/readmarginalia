@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { isMarginaliaAdmin } from "@/lib/admin";
+import { resolveRequestOrigin } from "@/lib/request-origin";
 import { createMarginaliaAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
@@ -39,7 +40,7 @@ export async function inviteReader(formData: FormData) {
   if (recordedInvitation) redirect("/admin/invitations?error=existing");
 
   const requestHeaders = await headers();
-  const origin = requestHeaders.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const origin = resolveRequestOrigin(requestHeaders);
   const callback = new URL("/auth/confirm", origin);
   callback.searchParams.set("next", "/app");
 

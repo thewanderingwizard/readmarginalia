@@ -9,6 +9,7 @@ import { Crest } from "@/components/brand/crest";
 import { MetatronsCube } from "@/components/brand/metatrons-cube";
 import { downloadLibraryArchive } from "@/lib/marginalia/export";
 import { prepareBookPhoto } from "@/lib/marginalia/photo";
+import { findMarginaliaQuote, nextMarginaliaQuoteId } from "@/lib/marginalia/quotes";
 import {
   createRemoteBook,
   createRemoteReflection,
@@ -305,11 +306,13 @@ function BookCover({ book, large = false }: { book: LibraryBook; large?: boolean
 export function MarginaliaApp({
   userId,
   initialLibrary,
+  initialQuoteId,
   initialAccountError = "",
   isAdmin = false,
 }: {
   userId: string;
   initialLibrary: MarginaliaLibrary;
+  initialQuoteId: string;
   initialAccountError?: string;
   isAdmin?: boolean;
 }) {
@@ -320,6 +323,7 @@ export function MarginaliaApp({
   const [name, setName] = useState(initialLibrary.profile.name);
   const [draft, setDraft] = useState<BookDraft>(EMPTY_DRAFT);
   const [filter, setFilter] = useState<ShelfFilter>("reading");
+  const [quoteId, setQuoteId] = useState(initialQuoteId);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [justPlaced, setJustPlaced] = useState(false);
   const [newReflection, setNewReflection] = useState("");
@@ -378,6 +382,16 @@ export function MarginaliaApp({
 
   function clearSaveError() {
     if (saveError) setSaveError("");
+  }
+
+  function rotateQuote() {
+    setQuoteId((current) => nextMarginaliaQuoteId(current));
+  }
+
+  function returnToLibrary() {
+    rotateQuote();
+    setScreen("library");
+    window.scrollTo(0, 0);
   }
 
   useEffect(() => {
@@ -450,6 +464,7 @@ export function MarginaliaApp({
       await saveReaderProfile(userId, library.profile, true);
       setLibrary((current) => ({ ...current, books: [book], onboarded: true }));
       setFilter("reading");
+      rotateQuote();
       setJustPlaced(true);
       setScreen("library");
       window.scrollTo(0, 0);
@@ -465,6 +480,7 @@ export function MarginaliaApp({
       book.photoPath = await createRemoteBook(userId, book) ?? null;
       setLibrary((current) => ({ ...current, books: [book, ...current.books] }));
       setFilter(book.status);
+      rotateQuote();
       setJustPlaced(true);
       setDraft(EMPTY_DRAFT);
       setScreen("library");
@@ -546,6 +562,7 @@ export function MarginaliaApp({
       setDetailMenuOpen(false);
       setConfirmDelete(false);
       setSelectedId(null);
+      rotateQuote();
       setScreen("library");
       window.scrollTo(0, 0);
     } catch (reason) {
@@ -744,7 +761,7 @@ export function MarginaliaApp({
         draft={draft}
         setDraft={setDraft}
         onSubmit={placeAdditionalBook}
-        onBack={() => setScreen("library")}
+        onBack={returnToLibrary}
         saveError={saveError}
       />
     );
@@ -768,7 +785,7 @@ export function MarginaliaApp({
       <main className={styles.accountPage}>
         <AppAtmosphere />
         <section className={styles.accountPanel} aria-labelledby="account-title">
-          <button className={styles.backButton} type="button" onClick={() => setScreen("library")}>← Return to the shelf</button>
+          <button className={styles.backButton} type="button" onClick={returnToLibrary}>← Return to the shelf</button>
           <p className={styles.eyebrow}>Your private keeping</p>
           <h1 id="account-title" className={styles.accountTitle}>Account & archive</h1>
           <p className={styles.accountIntroduction}>
@@ -840,7 +857,7 @@ export function MarginaliaApp({
         <AppAtmosphere />
         <article className={styles.detailPanel}>
           <div className={styles.detailTopbar}>
-            <button className={styles.backButton} type="button" onClick={() => setScreen("library")}>
+            <button className={styles.backButton} type="button" onClick={returnToLibrary}>
               ← Return to the shelf
             </button>
             <div className={styles.bookActions}>
@@ -1019,6 +1036,7 @@ export function MarginaliaApp({
   }
 
   const visibleBooks = library.books.filter((book) => book.status === filter);
+  const shelfQuote = findMarginaliaQuote(quoteId);
 
   return (
     <main className={styles.libraryPage}>
@@ -1055,6 +1073,7 @@ export function MarginaliaApp({
               aria-current={filter === status ? "page" : undefined}
               onClick={() => {
                 setFilter(status);
+                rotateQuote();
                 setJustPlaced(false);
               }}
             >
@@ -1092,6 +1111,18 @@ export function MarginaliaApp({
             Add to your library
           </button>
         </div>
+
+        <figure key={quoteId} className={styles.shelfQuotation} aria-live="polite">
+          <span className={styles.quoteOrnament} aria-hidden="true">✦</span>
+          <p className={styles.quoteLabel}>From the collective canon</p>
+          <blockquote>“{shelfQuote.text}”</blockquote>
+          <figcaption>
+            <span>— {shelfQuote.author}</span>
+            <a href={shelfQuote.sourceUrl} target="_blank" rel="noreferrer">
+              {shelfQuote.source}
+            </a>
+          </figcaption>
+        </figure>
 
         {library.profile.why ? (
           <footer className={styles.whyMemory}>
