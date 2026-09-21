@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { MarginaliaApp } from "@/components/marginalia/marginalia-app";
 import { isMarginaliaAdmin } from "@/lib/admin";
+import { isMarginaliaOwner } from "@/lib/owner";
 import { loadRemoteLibrary } from "@/lib/marginalia/load-library";
 import { randomMarginaliaQuoteId } from "@/lib/marginalia/quotes";
 import { createClient } from "@/lib/supabase/server";
@@ -35,6 +36,7 @@ export default async function AppPage({
       initialQuoteId={randomMarginaliaQuoteId()}
       initialAccountError={accountError}
       isAdmin={isMarginaliaAdmin(data.user)}
+      isOwner={isMarginaliaOwner(data.user)}
     />
   );
 }
