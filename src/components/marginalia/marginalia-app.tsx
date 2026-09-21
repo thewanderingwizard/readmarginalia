@@ -309,12 +309,14 @@ export function MarginaliaApp({
   initialQuoteId,
   initialAccountError = "",
   isAdmin = false,
+  isOwner = false,
 }: {
   userId: string;
   initialLibrary: MarginaliaLibrary;
   initialQuoteId: string;
   initialAccountError?: string;
   isAdmin?: boolean;
+  isOwner?: boolean;
 }) {
   const [hydrated, setHydrated] = useState(false);
   const [screen, setScreen] = useState<Screen>(initialLibrary.onboarded ? "library" : "welcome");
@@ -793,6 +795,15 @@ export function MarginaliaApp({
           </p>
 
           {saveError ? <p className={styles.error} role="alert">{saveError}</p> : null}
+
+          {isOwner ? (
+            <section className={styles.accountSection} aria-labelledby="wizard-title">
+              <p className={styles.eyebrow}>Owner stewardship</p>
+              <h2 id="wizard-title">Enter the Wizard’s Study.</h2>
+              <p>Monitor the Alpha threshold, reader access, and the health of the house.</p>
+              <Link className={styles.primaryButton} href="/wizard">Open the Owner portal</Link>
+            </section>
+          ) : null}
 
           {isAdmin ? (
             <section className={styles.accountSection} aria-labelledby="invitations-title">
