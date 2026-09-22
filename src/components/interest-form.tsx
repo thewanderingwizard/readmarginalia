@@ -31,7 +31,7 @@ export function InterestForm() {
 
   if (state === "succeeded") {
     return (
-      <section className="interest-card interest-card--received" aria-live="polite">
+      <section id="interest" className="interest-card interest-card--received" aria-live="polite">
         <p className="eyebrow">Address received</p>
         <h2>Your name rests at the threshold.</h2>
         <p>
@@ -42,7 +42,7 @@ export function InterestForm() {
   }
 
   return (
-    <section className="interest-card" aria-labelledby="interest-title">
+    <section id="interest" className="interest-card" aria-labelledby="interest-title">
       <p className="eyebrow">Invitation correspondence</p>
       <h2 id="interest-title">Leave your address at the threshold.</h2>
       <p className="interest-card__introduction">
