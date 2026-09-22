@@ -239,9 +239,14 @@ a {
   background: rgba(196, 154, 77, 0.12);
 }
 
+.threshold__interest-link {
+  display: none;
+}
+
 .interest-card {
   width: min(100%, 38rem);
   margin-top: clamp(3.5rem, 9vh, 6rem);
+  scroll-margin-top: 2rem;
   padding: clamp(1.5rem, 5vw, 2.5rem);
   border: 1px solid var(--line);
   background: rgba(18, 12, 8, 0.58);
@@ -527,6 +532,23 @@ a {
   .threshold__actions,
   .button {
     width: 100%;
+  }
+
+  .threshold__interest-link {
+    display: inline-flex;
+    position: fixed;
+    z-index: 20;
+    right: 1rem;
+    bottom: max(0.85rem, env(safe-area-inset-bottom));
+    left: 1rem;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    box-shadow: 0 0.8rem 2.5rem rgba(0, 0, 0, 0.48);
+  }
+
+  body:has(.interest-card:target) .threshold__interest-link {
+    display: none;
   }
 
   .interest-form__row {

@@ -32,6 +32,9 @@ export default function Home() {
             <Link className="button button--quiet" href="/about">
               Read our purpose
             </Link>
+            <a className="button button--quiet threshold__interest-link" href="#interest">
+              Request an invitation
+            </a>
           </div>
           <InterestForm />
         </div>
