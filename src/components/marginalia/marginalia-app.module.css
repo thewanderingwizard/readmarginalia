@@ -666,12 +666,17 @@
 }
 
 .primaryButton {
+  display: inline-flex;
   min-height: 3.1rem;
+  align-items: center;
+  justify-content: center;
   margin-top: 2rem;
   padding: 0.8rem 1.7rem;
   border: 1px solid var(--brass-700);
   color: #17120e;
   background: var(--brass-700);
+  text-align: center;
+  text-decoration: none;
 }
 
 .primaryButton:hover {
