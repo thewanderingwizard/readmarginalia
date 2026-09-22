@@ -334,6 +334,8 @@ export function MarginaliaApp({
   const [detailMenuOpen, setDetailMenuOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [saveError, setSaveError] = useState(initialAccountError);
+  const [profileBusy, setProfileBusy] = useState(false);
+  const [profileMessage, setProfileMessage] = useState("");
   const [exportBusy, setExportBusy] = useState(false);
   const [exportMessage, setExportMessage] = useState("");
 
@@ -426,6 +428,25 @@ export function MarginaliaApp({
       window.scrollTo(0, 0);
     } catch (reason) {
       reportSaveError(reason);
+    }
+  }
+
+  async function updateReaderProfile(event: FormEvent) {
+    event.preventDefault();
+    const profile = { name: name.trim(), why: why.trim() };
+    clearSaveError();
+    setProfileMessage("");
+    setProfileBusy(true);
+    try {
+      await saveReaderProfile(userId, profile);
+      setLibrary((current) => ({ ...current, profile }));
+      setName(profile.name);
+      setWhy(profile.why);
+      setProfileMessage("Your reader profile has been updated.");
+    } catch (reason) {
+      reportSaveError(reason);
+    } finally {
+      setProfileBusy(false);
     }
   }
 
@@ -795,6 +816,49 @@ export function MarginaliaApp({
           </p>
 
           {saveError ? <p className={styles.error} role="alert">{saveError}</p> : null}
+
+          <section className={styles.accountSection} aria-labelledby="reader-profile-title">
+            <p className={styles.eyebrow}>Reader profile</p>
+            <h2 id="reader-profile-title">Tend the reason beneath your shelves.</h2>
+            <p>
+              Your answer remains private to your account and may change as your reading life changes.
+            </p>
+            <form className={styles.profileForm} onSubmit={updateReaderProfile}>
+              <label className={styles.field}>
+                <span className={styles.fieldLabel}>Display name</span>
+                <input
+                  className={styles.lineInput}
+                  type="text"
+                  value={name}
+                  maxLength={120}
+                  autoComplete="name"
+                  placeholder="optional"
+                  onChange={(event) => {
+                    setName(event.target.value);
+                    setProfileMessage("");
+                  }}
+                />
+              </label>
+              <label className={styles.field}>
+                <span className={styles.fieldLabel}>Why I read</span>
+                <textarea
+                  className={styles.lineTextarea}
+                  rows={5}
+                  value={why}
+                  maxLength={20_000}
+                  placeholder="I read because…"
+                  onChange={(event) => {
+                    setWhy(event.target.value);
+                    setProfileMessage("");
+                  }}
+                />
+              </label>
+              <button className={styles.primaryButton} type="submit" disabled={profileBusy}>
+                {profileBusy ? "Saving…" : "Save my reader profile"}
+              </button>
+              {profileMessage ? <p className={styles.savedNote} role="status">{profileMessage}</p> : null}
+            </form>
+          </section>
 
           {isOwner ? (
             <section className={styles.accountSection} aria-labelledby="wizard-title">
