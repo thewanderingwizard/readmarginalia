@@ -239,6 +239,113 @@ a {
   background: rgba(196, 154, 77, 0.12);
 }
 
+.interest-card {
+  width: min(100%, 38rem);
+  margin-top: clamp(3.5rem, 9vh, 6rem);
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+  border: 1px solid var(--line);
+  background: rgba(18, 12, 8, 0.58);
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.18);
+}
+
+.interest-card h2 {
+  margin: 0.65rem 0 0;
+  color: var(--ink-900);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 500;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+.interest-card__introduction,
+.interest-card--received > p:last-child {
+  max-width: 31rem;
+  margin: 1rem auto 0;
+  color: var(--ink-700);
+}
+
+.interest-form {
+  margin-top: 1.75rem;
+  text-align: left;
+}
+
+.interest-form > label {
+  display: block;
+  margin-bottom: 0.55rem;
+  color: var(--brass-400);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.interest-form__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+}
+
+.interest-form input,
+.interest-form button {
+  min-height: 3.25rem;
+  border-radius: var(--radius);
+  font: inherit;
+}
+
+.interest-form input {
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(200, 161, 84, 0.48);
+  color: var(--ink-950);
+  background: rgba(10, 7, 5, 0.62);
+}
+
+.interest-form input::placeholder {
+  color: var(--ink-500);
+}
+
+.interest-form button {
+  padding: 0.75rem 1.2rem;
+  border: 1px solid var(--brass-700);
+  color: #17120e;
+  background: var(--brass-700);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.interest-form button:hover:not(:disabled) {
+  background: var(--brass-400);
+}
+
+.interest-form input:disabled,
+.interest-form button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.interest-card__consent,
+.interest-card__error {
+  margin: 0.8rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.interest-card__consent {
+  color: var(--ink-500);
+}
+
+.interest-card__error {
+  color: #e0aaa0;
+}
+
+.interest-card--received {
+  padding-block: 2.5rem;
+}
+
 .reading-page {
   min-height: 100vh;
   padding: clamp(2rem, 7vw, 6rem) 1.5rem;
@@ -419,6 +526,14 @@ a {
 
   .threshold__actions,
   .button {
+    width: 100%;
+  }
+
+  .interest-form__row {
+    grid-template-columns: 1fr;
+  }
+
+  .interest-form button {
     width: 100%;
   }
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Crest } from "@/components/brand/crest";
+import { InterestForm } from "@/components/interest-form";
 import { MetatronsCube } from "@/components/brand/metatrons-cube";
 
 export default function Home() {
@@ -32,6 +33,7 @@ export default function Home() {
               Read our purpose
             </Link>
           </div>
+          <InterestForm />
         </div>
       </section>
     </main>
