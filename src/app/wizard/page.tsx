@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Crest } from "@/components/brand/crest";
 import { isMarginaliaOwner } from "@/lib/owner";
 import { parseOwnerUserIds } from "@/lib/owner-access";
+import { buildReaderRegistry, type RegistryInvitation } from "@/lib/reader-registry";
 import { createMarginaliaAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { sendReaderAccessEmail } from "./actions";
@@ -16,14 +17,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-type Invitation = {
-  id: string;
-  email: string;
-  status: "pending" | "accepted" | "revoked";
-  created_at: string;
-  accepted_at: string | null;
-};
-
 type AuditEntry = {
   id: string;
   actor_email: string | null;
@@ -31,15 +24,6 @@ type AuditEntry = {
   target_email: string | null;
   outcome: "succeeded" | "failed" | "rate_limited";
   created_at: string;
-};
-
-type ReaderRow = {
-  email: string;
-  invitationStatus: Invitation["status"] | "account";
-  invitedAt: string | null;
-  acceptedAt: string | null;
-  createdAt: string | null;
-  lastSignInAt: string | null;
 };
 
 const accessMessages = {
@@ -75,47 +59,6 @@ function formatDate(value: string | null) {
   }).format(new Date(value));
 }
 
-function readerRegistry(
-  users: User[],
-  invitations: Invitation[],
-  ownerIds: Set<string>,
-  ownerEmails: Set<string>,
-) {
-  const records = new Map<string, ReaderRow>();
-
-  for (const invitation of invitations) {
-    if (ownerEmails.has(invitation.email.toLowerCase())) continue;
-    records.set(invitation.email.toLowerCase(), {
-      email: invitation.email,
-      invitationStatus: invitation.status,
-      invitedAt: invitation.created_at,
-      acceptedAt: invitation.accepted_at,
-      createdAt: null,
-      lastSignInAt: null,
-    });
-  }
-
-  for (const user of users) {
-    if (!user.email || ownerIds.has(user.id.toLowerCase())) continue;
-    const email = user.email.toLowerCase();
-    const existing = records.get(email);
-    records.set(email, {
-      email,
-      invitationStatus: existing?.invitationStatus ?? "account",
-      invitedAt: existing?.invitedAt ?? null,
-      acceptedAt: existing?.acceptedAt ?? user.email_confirmed_at ?? null,
-      createdAt: user.created_at,
-      lastSignInAt: user.last_sign_in_at ?? null,
-    });
-  }
-
-  return [...records.values()].sort((left, right) => {
-    const leftDate = left.invitedAt ?? left.createdAt ?? "";
-    const rightDate = right.invitedAt ?? right.createdAt ?? "";
-    return rightDate.localeCompare(leftDate);
-  });
-}
-
 export default async function WizardPage({
   searchParams,
 }: {
@@ -130,7 +73,7 @@ export default async function WizardPage({
   const accessMessage = parameters.access ? accessMessages[parameters.access] : null;
   const admin = createMarginaliaAdminClient();
 
-  let invitations: Invitation[] = [];
+  let invitations: RegistryInvitation[] = [];
   let users: User[] = [];
   let audits: AuditEntry[] = [];
   let databaseOnline = false;
@@ -156,7 +99,7 @@ export default async function WizardPage({
       admin.storage.listBuckets(),
     ]);
 
-    invitations = (invitationResult.data as Invitation[] | null) ?? [];
+    invitations = (invitationResult.data as RegistryInvitation[] | null) ?? [];
     users = userResult.data?.users ?? [];
     audits = (auditResult.data as AuditEntry[] | null) ?? [];
     invitationLedgerOnline = !invitationResult.error;
@@ -176,15 +119,10 @@ export default async function WizardPage({
   const readerInvitations = invitations.filter(
     (invitation) => !ownerEmails.has(invitation.email.toLowerCase()),
   );
-  const readers = readerRegistry(users, readerInvitations, ownerIds, ownerEmails);
-  const accepted = readerInvitations.filter((invitation) => invitation.status === "accepted").length;
-  const pending = readerInvitations.filter((invitation) => invitation.status === "pending").length;
-  const revoked = readerInvitations.filter((invitation) => invitation.status === "revoked").length;
-  const readersWhoHaveSignedIn = users.filter(
-    (user) =>
-      !ownerIds.has(user.id.toLowerCase()) &&
-      Boolean(user.last_sign_in_at),
-  ).length;
+  const readers = buildReaderRegistry(users, readerInvitations, ownerIds, ownerEmails);
+  const activated = readers.filter((reader) => reader.status === "activated").length;
+  const pending = readers.filter((reader) => reader.status === "pending").length;
+  const revoked = readers.filter((reader) => reader.status === "revoked").length;
 
   const health = [
     { label: "Database", online: databaseOnline },
@@ -223,9 +161,9 @@ export default async function WizardPage({
 
         <section className={styles.metrics} aria-label="Alpha overview">
           <article><span>{readerInvitations.length}</span><p>Invited</p></article>
-          <article><span>{accepted}</span><p>Accepted</p></article>
-          <article><span>{pending}</span><p>Pending</p></article>
-          <article><span>{readersWhoHaveSignedIn}</span><p>Have signed in</p></article>
+          <article><span>{activated}</span><p>Activated</p></article>
+          <article><span>{pending}</span><p>Awaiting first entry</p></article>
+          <article><span>{revoked}</span><p>Revoked</p></article>
         </section>
 
         <div className={styles.columns}>
@@ -284,15 +222,15 @@ export default async function WizardPage({
             <div className={styles.tableWrap}>
               <table>
                 <thead>
-                  <tr><th>Reader</th><th>Status</th><th>Invited</th><th>Accepted</th><th>Last sign-in</th></tr>
+                  <tr><th>Reader</th><th>Status</th><th>Invited</th><th>Activated</th><th>Last sign-in</th></tr>
                 </thead>
                 <tbody>
                   {readers.map((reader) => (
                     <tr key={reader.email}>
                       <td>{reader.email}</td>
-                      <td><span className={styles.status}>{reader.invitationStatus}</span></td>
+                      <td><span className={styles.status}>{reader.status}</span></td>
                       <td>{formatDate(reader.invitedAt)}</td>
-                      <td>{formatDate(reader.acceptedAt)}</td>
+                      <td>{formatDate(reader.activatedAt)}</td>
                       <td>{formatDate(reader.lastSignInAt)}</td>
                     </tr>
                   ))}
