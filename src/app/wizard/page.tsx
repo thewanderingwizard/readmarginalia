@@ -3,6 +3,12 @@ import type { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Crest } from "@/components/brand/crest";
+import {
+  buildObservatoryMetrics,
+  EMPTY_OBSERVATORY_METRICS,
+  type ObservatoryBookRecord,
+  type ObservatoryOwnedRecord,
+} from "@/lib/observatory";
 import { isMarginaliaOwner } from "@/lib/owner";
 import { parseOwnerUserIds } from "@/lib/owner-access";
 import { buildReaderRegistry, type RegistryInvitation } from "@/lib/reader-registry";
@@ -59,6 +65,14 @@ function formatDate(value: string | null) {
   }).format(new Date(value));
 }
 
+function formatElapsedHours(value: number | null) {
+  if (value === null) return "—";
+  if (value < 1) return "Under 1 hour";
+  if (value < 24) return `${Math.round(value)} hours`;
+  const days = value / 24;
+  return `${days < 10 ? days.toFixed(1) : Math.round(days)} days`;
+}
+
 export default async function WizardPage({
   searchParams,
 }: {
@@ -76,14 +90,27 @@ export default async function WizardPage({
   let invitations: RegistryInvitation[] = [];
   let users: User[] = [];
   let audits: AuditEntry[] = [];
+  let observatoryBooks: ObservatoryBookRecord[] = [];
+  let observatoryReflections: ObservatoryOwnedRecord[] = [];
+  let observatoryCovers: ObservatoryOwnedRecord[] = [];
   let databaseOnline = false;
   let authOnline = false;
   let storageOnline = false;
   let invitationLedgerOnline = false;
   let auditOnline = false;
+  let observatoryOnline = false;
 
   if (admin) {
-    const [invitationResult, userResult, auditResult, profileResult, storageResult] = await Promise.all([
+    const [
+      invitationResult,
+      userResult,
+      auditResult,
+      profileResult,
+      storageResult,
+      bookResult,
+      reflectionResult,
+      coverResult,
+    ] = await Promise.all([
       admin
         .from("invitations")
         .select("id,email,status,created_at,accepted_at")
@@ -97,16 +124,23 @@ export default async function WizardPage({
         .limit(50),
       admin.from("profiles").select("id", { count: "exact", head: true }),
       admin.storage.listBuckets(),
+      admin.from("books").select("user_id,status,added_at").limit(5000),
+      admin.from("reflections").select("user_id").limit(5000),
+      admin.from("book_images").select("user_id").eq("kind", "cover").limit(5000),
     ]);
 
     invitations = (invitationResult.data as RegistryInvitation[] | null) ?? [];
     users = userResult.data?.users ?? [];
     audits = (auditResult.data as AuditEntry[] | null) ?? [];
+    observatoryBooks = (bookResult.data as ObservatoryBookRecord[] | null) ?? [];
+    observatoryReflections = (reflectionResult.data as ObservatoryOwnedRecord[] | null) ?? [];
+    observatoryCovers = (coverResult.data as ObservatoryOwnedRecord[] | null) ?? [];
     invitationLedgerOnline = !invitationResult.error;
     authOnline = !userResult.error;
     auditOnline = !auditResult.error;
     databaseOnline = !profileResult.error;
     storageOnline = !storageResult.error;
+    observatoryOnline = !userResult.error && !bookResult.error && !reflectionResult.error && !coverResult.error;
   }
 
   const ownerIds = parseOwnerUserIds(process.env.MARGINALIA_OWNER_USER_IDS);
@@ -123,6 +157,16 @@ export default async function WizardPage({
   const activated = readers.filter((reader) => reader.status === "activated").length;
   const pending = readers.filter((reader) => reader.status === "pending").length;
   const revoked = readers.filter((reader) => reader.status === "revoked").length;
+  const observatory = observatoryOnline
+    ? buildObservatoryMetrics({
+        readers,
+        users,
+        books: observatoryBooks,
+        reflections: observatoryReflections,
+        covers: observatoryCovers,
+        ownerIds,
+      })
+    : EMPTY_OBSERVATORY_METRICS;
 
   const health = [
     { label: "Database", online: databaseOnline },
@@ -164,6 +208,66 @@ export default async function WizardPage({
           <article><span>{activated}</span><p>Activated</p></article>
           <article><span>{pending}</span><p>Awaiting first entry</p></article>
           <article><span>{revoked}</span><p>Revoked</p></article>
+        </section>
+
+        <section className={`${styles.panel} ${styles.observatory}`} aria-labelledby="observatory-title">
+          <div className={styles.sectionHeading}>
+            <div>
+              <p className={styles.eyebrow}>Read-only aggregate · private</p>
+              <h2 id="observatory-title">The Alpha Observatory</h2>
+            </div>
+            <span>Content remains sealed</span>
+          </div>
+          <p className={styles.observatoryIntroduction}>
+            A view of participation and library health calculated only from ownership IDs, statuses, and timestamps. Titles,
+            reflections, reading mottos, filenames, and photographs are never retrieved.
+          </p>
+          {!observatoryOnline ? (
+            <p className={`${styles.notice} ${styles.warning}`} role="status">
+              The Observatory could not complete its read-only count. Reader shelves remain unaffected.
+            </p>
+          ) : (
+            <>
+              <div className={styles.observatoryGrid}>
+                <article>
+                  <strong>{observatory.firstEntryRate}%</strong>
+                  <p>First shelf-entry rate</p>
+                  <small>{observatory.firstEntryReaders} of {activated} activated readers</small>
+                </article>
+                <article>
+                  <strong>{observatory.contributingReaders}</strong>
+                  <p>Contributing readers</p>
+                  <small>Readers with at least one book</small>
+                </article>
+                <article>
+                  <strong>{formatElapsedHours(observatory.medianHoursToFirstEntry)}</strong>
+                  <p>Median time to first entry</p>
+                  <small>From activation to first placed book</small>
+                </article>
+                <article>
+                  <strong>{observatory.totalBooks}</strong>
+                  <p>Books currently tended</p>
+                  <small>{observatory.finishedBooks} presently marked finished</small>
+                </article>
+                <article>
+                  <strong>{observatory.totalReflections}</strong>
+                  <p>Reflections preserved</p>
+                  <small>Anonymous aggregate only</small>
+                </article>
+                <article>
+                  <strong>{observatory.totalCovers}</strong>
+                  <p>Cover photographs</p>
+                  <small>Files are never opened or inspected</small>
+                </article>
+              </div>
+              <dl className={styles.shelfStatus} aria-label="Current books by shelf">
+                <div><dt>Essential reads</dt><dd>{observatory.booksByStatus.essential}</dd></div>
+                <div><dt>Currently reading</dt><dd>{observatory.booksByStatus.reading}</dd></div>
+                <div><dt>On the horizon</dt><dd>{observatory.booksByStatus.horizon}</dd></div>
+                <div><dt>Finished reads</dt><dd>{observatory.booksByStatus.finished}</dd></div>
+              </dl>
+            </>
+          )}
         </section>
 
         <div className={styles.columns}>
